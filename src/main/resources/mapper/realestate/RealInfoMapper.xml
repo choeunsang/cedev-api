@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cedev.api.realestate.mapper.RealInfoMapper">
+
+    <!-- 주택 매매 거래량 API -->
+    <select id="getHousingTradeVolume"
+            resultType="com.cedev.api.realestate.dto.HousingTradeVolumeDto">
+        SELECT
+            sido,
+            sigungu,
+            dong,
+            ContYear AS contYear,
+            COUNT(ContYear) AS cnt
+        FROM KR_REAL_INFO
+        WHERE sido = #{sido}
+        <if test="sigungu != null and sigungu != ''">
+            AND sigungu = #{sigungu}
+        </if>
+        <if test="dong != null and dong != ''">
+            AND dong = #{dong}
+        </if>
+        AND ContYear BETWEEN #{startYearMonth} AND #{endYearMonth}
+        GROUP BY sido, sigungu, dong, ContYear
+        ORDER BY ContYear ASC
+    </select>
+
+
+    <!-- 주택 거래량 월별 합계 API -->
+    <select id="getHousingTradeVolumeMonthly"
+            resultType="com.cedev.api.realestate.dto.HousingTradeVolumeMonthlyDto">
+        SELECT
+            ContYear AS contYear,
+            COUNT(ContYear) AS cnt
+        FROM KR_REAL_INFO
+        WHERE sido = #{sido}
+        <if test="sigungu != null and sigungu != ''">
+            AND sigungu = #{sigungu}
+        </if>
+        <if test="dong != null and dong != ''">
+            AND dong = #{dong}
+        </if>
+        AND ContYear BETWEEN #{startYearMonth} AND #{endYearMonth}
+        GROUP BY ContYear
+        ORDER BY ContYear ASC
+    </select>
+
+
+    <!-- 최근 거래건 API -->
+    <select id="getRecentTransactions"
+            resultType="com.cedev.api.realestate.dto.RecentTransactionDto">
+        SELECT DISTINCT
+            city,
+            sido,
+            sigungu,
+            dong,
+            dangi,
+            DediArea AS dediArea,
+            ContDate AS contDate,
+            amount,
+            [Floor] AS floor
+        FROM KR_REAL_INFO
+        WHERE sido = #{sido}
+        <if test="sigungu != null and sigungu != ''">
+            AND sigungu = #{sigungu}
+        </if>
+        <if test="dong != null and dong != ''">
+            AND dong = #{dong}
+        </if>
+        <if test="dangi != null and dangi != ''">
+            AND dangi = #{dangi}
+        </if>
+        AND ContYear BETWEEN #{startYearMonth} AND #{endYearMonth}
+        ORDER BY city, dangi, DediArea
+    </select>
+
+
+    <!-- 부동산 상세 평균 거래금액 API -->
+    <select id="getRealEstateDetail"
+            resultType="com.cedev.api.realestate.dto.RealEstateDetailDto">
+        SELECT
+            city,
+            sido,
+            sigungu,
+            dong,
+            dangi,
+            DediArea AS dediArea,
+            AVG(CAST(REPLACE(amount, ',', '') AS INT)) AS avgAmount,
+            COUNT(*) AS cnt,
+            ContYear AS contYear
+        FROM KR_REAL_INFO
+        WHERE sido = #{sido}
+        <if test="sigungu != null and sigungu != ''">
+            AND sigungu = #{sigungu}
+        </if>
+        <if test="dong != null and dong != ''">
+            AND dong = #{dong}
+        </if>
+        <if test="dangi != null and dangi != ''">
+            AND dangi = #{dangi}
+        </if>
+        <if test="dediArea != null and dediArea != ''">
+            AND DediArea = #{dediArea}
+        </if>
+        GROUP BY city, sido, sigungu, dong, dangi, DediArea, ContYear
+        ORDER BY city, dangi, DediArea
+    </select>
+
+
+    <!-- 시군구별 월별 거래량 API -->
+    <select id="getSigunguMonthlyTradeVolume"
+            resultType="com.cedev.api.realestate.dto.SigunguMonthlyTradeVolumeDto">
+        SELECT
+            sigungu,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '01' THEN 1 ELSE 0 END) AS month01,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '02' THEN 1 ELSE 0 END) AS month02,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '03' THEN 1 ELSE 0 END) AS month03,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '04' THEN 1 ELSE 0 END) AS month04,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '05' THEN 1 ELSE 0 END) AS month05,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '06' THEN 1 ELSE 0 END) AS month06,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '07' THEN 1 ELSE 0 END) AS month07,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '08' THEN 1 ELSE 0 END) AS month08,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '09' THEN 1 ELSE 0 END) AS month09,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '10' THEN 1 ELSE 0 END) AS month10,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '11' THEN 1 ELSE 0 END) AS month11,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '12' THEN 1 ELSE 0 END) AS month12
+        FROM KR_REAL_INFO
+        WHERE sido = #{sido}
+          AND ContYear BETWEEN #{startYearMonth} AND #{endYearMonth}
+        GROUP BY sigungu
+        ORDER BY sigungu
+    </select>
+
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cedev.api.member.mapper.UserMapper">
+
+    <!-- 회원정보 목록조회 -->
+    <select id="getUserList"
+            resultType="com.cedev.api.member.dto.UserDto">
+
+        SELECT
+            UserSeq    AS userSeq,
+            UserId     AS userId,
+            UserPw     AS userPw,
+            UserName   AS userName,
+            Email      AS email,
+            Phone      AS phone,
+            DeptCd     AS deptCd,
+            RoleCd     AS roleCd,
+            UseYn      AS useYn,
+            RegDate    AS regDate,
+            UpdateDate AS updateDate
+        FROM USER_INFO
+        WHERE UseYn = 'Y'
+        ORDER BY UserSeq DESC
+
+    </select>
+
+    <!-- 회원정보 상세 -->
+    <select id="getUser"
+            resultType="com.cedev.api.member.dto.UserDto">
+
+        SELECT
+            UserSeq    AS userSeq,
+            UserId     AS userId,
+            UserPw     AS userPw,
+            UserName   AS userName,
+            Email      AS email,
+            Phone      AS phone,
+            DeptCd     AS deptCd,
+            RoleCd     AS roleCd,
+            UseYn      AS useYn,
+            RegDate    AS regDate,
+            UpdateDate AS updateDate
+        FROM USER_INFO
+        WHERE UserSeq = #{userSeq}
+
+    </select>
+
+    <!-- 회원정보 등록 -->
+    <insert id="createUser"
+            parameterType="com.cedev.api.member.dto.UserCreateRequestDto">
+
+        INSERT INTO USER_INFO (
+            UserId,
+            UserPw
+        )
+        VALUES (
+            #{userId},
+            #{userPw}
+        )
+
+    </insert>
+
+    <!-- 회원정보 수정 -->
+    <update id="updateUser">
+
+        UPDATE USER_INFO
+        SET UserPw = #{param.userPw},
+            UpdateDate = SYSDATETIME()
+        WHERE UserSeq = #{userSeq}
+
+    </update>
+
+    <!-- 회원정보 삭제 -->
+    <update id="deleteUser">
+
+        UPDATE USER_INFO
+        SET UseYn = 'N',
+            UpdateDate = SYSDATETIME()
+        WHERE UserSeq = #{userSeq}
+
+    </update>
+
+</mapper>

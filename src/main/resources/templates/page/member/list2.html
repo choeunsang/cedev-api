@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<!-- 🛑 타임리프 문법을 사용하기 위해 xmlns 추가 -->
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Member List</title>
+</head>
+<body>
+    <div> member list </div>
+    <div>
+        <table border="1">
+            <!-- 🛑 th:each를 사용하여 반복문을 돌립니다. -->
+            <tr th:each="user : ${list}">
+                <!-- 🛑 UserDto 클래스 내부에 정의된 실제 필드명을 th:text에 적어줍니다. (예: userId, userName 등) -->
+                <td th:text="${user.userName}">회원이름 자리</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

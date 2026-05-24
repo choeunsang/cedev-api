@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cedev.api.realestate.mapper.RentInfoMapper">
+
+    <!-- 주택 전월세 조회 -->
+    <select id="getRentInfoList"
+		parameterType="com.cedev.api.realestate.dto.RentInfoSearchDto" 
+    	resultType="com.cedev.api.realestate.dto.RentInfoDto">
+        SELECT
+            city,
+            bungi,
+            bonBun,
+            buBun,
+            dangi,
+            gubun,
+            dediArea,
+            contYear,
+            contDate,
+            deposit,
+            monPay,
+            floor,
+            consYear,
+            road,
+            term,
+            termGubun,
+            rightRequ,
+            prevDeposit,
+            prevMonPay,
+            housKind,
+            sido,
+            sigungu,
+            dong
+        FROM KR_REAL_RENT_INFO
+        WHERE 1 = 1
+        <if test="sido != null and sido != ''">
+            AND sido = #{sido}
+        </if>
+        <if test="sigungu != null and sigungu != ''">
+            AND sigungu = #{sigungu}
+        </if>
+        <if test="dong != null and dong != ''">
+            AND dong = #{dong}
+        </if>
+        <if test="year != null and year != ''">
+            AND ContYear BETWEEN CONCAT(#{year}, '01') AND CONCAT(#{year}, '12')
+        </if>        
+        <if test="gubun != null and gubun != ''">
+		    AND Gubun = #{gubun}
+		</if>
+        ORDER BY ContYear DESC, ContDate DESC
+    </select>
+
+    <!-- 주택 전월세 거래량 -->
+    <select id="getHousRentVolume"
+            resultType="com.cedev.api.realestate.dto.HousRentVolumeDto">
+        SELECT
+            ContYear AS contYear,
+            COUNT(ContYear) AS cnt
+        FROM KR_REAL_RENT_INFO
+        WHERE sido = #{sido}
+
+        <if test="sigungu != null and sigungu != ''">
+            AND sigungu = #{sigungu}
+        </if>
+
+        <if test="dong != null and dong != ''">
+            AND dong = #{dong}
+        </if>
+        AND ContYear BETWEEN #{startYearMonth} AND #{endYearMonth}
+        GROUP BY ContYear
+        ORDER BY ContYear ASC
+    </select>
+
+
+    
+    <!-- 주택 전월세 갱신/신규 현황 -->
+    <select id="getRentGbunStatus" 
+		parameterType="com.cedev.api.realestate.dto.RentInfoSearchDto" 
+    	resultType="com.cedev.api.realestate.dto.RentGbunDto">
+    
+        SELECT 
+            sigungu, 
+            COUNT(CASE WHEN termGubun = '신규' THEN 1 END) AS newContractCnt, 
+            COUNT(CASE WHEN termGubun = '갱신' THEN 1 END) AS renewContractCnt, 
+            COUNT(CASE WHEN rightRequ = '사용' THEN 1 END) AS usedRightCnt,
+            ROUND((CAST(COUNT(CASE WHEN rightRequ = '사용' THEN 1 END) AS FLOAT) / NULLIF(COUNT(CASE WHEN termGubun = '갱신' THEN 1 END), 0)) * 100, 2)  AS usePercent  
+        FROM KR_REAL_RENT_INFO 
+        WHERE 1=1 
+        <if test="sido != null and sido != ''">
+            AND sido = #{sido}
+        </if>
+        <if test="year != null and year != ''">
+            AND ContYear BETWEEN CONCAT(#{year}, '01') AND CONCAT(#{year}, '12')
+        </if>        
+        GROUP BY sigungu
+        ORDER BY sigungu ASC
+    </select>    
+
+</mapper>

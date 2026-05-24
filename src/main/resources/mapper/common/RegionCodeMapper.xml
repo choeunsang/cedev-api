@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cedev.api.common.mapper.RegionCodeMapper">
+
+    <!-- 시도 조회 -->
+    <select id="getSido" resultType="string">
+
+        SELECT DISTINCT sido
+        FROM REGION_CODE
+        ORDER BY sido
+
+    </select>
+
+    <!-- 시군구 조회 -->
+    <select id="getSigungu" resultType="string">
+
+        SELECT DISTINCT sigungu
+        FROM REGION_CODE
+        WHERE sido = #{sido}
+        ORDER BY sigungu
+
+    </select>
+
+    <!-- 동 조회 -->
+    <select id="getDong" resultType="string">
+
+        SELECT DISTINCT dong
+        FROM REGION_CODE
+        WHERE sido = #{sido}
+          AND sigungu = #{sigungu}
+        ORDER BY dong
+
+    </select>
+
+</mapper>

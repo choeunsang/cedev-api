@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cedev.api.login.mapper.AuthMapper">
+
+    <!-- ID존재 여부확인 -->
+    <select id="chkExistId"
+              resultType="int" >
+
+        SELECT
+            COUNT(*) AS cnt 
+		 FROM USER_INFO            
+        WHERE UserId = #{userId}
+          AND UseYn = 'Y'
+
+    </select>
+    
+    
+    <!-- PW확인 -->
+    <select id="chkPw"
+            resultType="com.cedev.api.member.dto.UserDto">
+
+            SELECT
+                UserSeq,
+                UserId,
+                UserName,
+                DeptCd,
+                RoleCd
+            FROM USER_INFO
+            WHERE UserId = #{userId}
+              AND UserPw = #{userPw}
+              AND UseYn = 'Y'
+
+    </select>    
+
+ 
+
+</mapper>
