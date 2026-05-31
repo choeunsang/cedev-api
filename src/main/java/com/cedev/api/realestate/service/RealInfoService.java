@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.cedev.api.realestate.dto.EntireMonthlyTradeVolumeDto;
+import com.cedev.api.realestate.dto.HousingTradeInfoDto;
 import com.cedev.api.realestate.dto.HousingTradeVolumeDto;
 import com.cedev.api.realestate.dto.HousingTradeVolumeMonthlyDto;
 import com.cedev.api.realestate.dto.RealInfoSearchDto;
@@ -23,6 +25,14 @@ public class RealInfoService {
     public RealInfoService(RealInfoMapper realInfoMapper) {
         this.realInfoMapper = realInfoMapper;
     }
+    
+    //-------------------------------------------------------------------------------------------
+    // 주택 매매 정보 API
+    //-------------------------------------------------------------------------------------------
+    public List<HousingTradeInfoDto> getHousingTradeInfo(RealInfoSearchDto searchDto) {
+
+        return realInfoMapper.getHousingTradeInfo(searchDto);
+    }    
 
 
     //-------------------------------------------------------------------------------------------
@@ -68,4 +78,13 @@ public class RealInfoService {
 
         return realInfoMapper.getSigunguMonthlyTradeVolume(searchDto);
     }
+    
+    
+    //-------------------------------------------------------------------------------------------
+    // 전국 월별 거래량 API
+    //-------------------------------------------------------------------------------------------
+    public List<EntireMonthlyTradeVolumeDto> getEntireMonthlyTradeVolume(RealInfoSearchDto searchDto) {
+
+        return realInfoMapper.getEntireMonthlyTradeVolume(searchDto);
+    }    
 }

@@ -1,5 +1,12 @@
 package com.cedev.api.realestate.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 public class SigunguMonthlyTradeVolumeDto {
 
     private String sigungu;
@@ -17,107 +24,6 @@ public class SigunguMonthlyTradeVolumeDto {
     private int month11;
     private int month12;
 
-    public String getSigungu() {
-        return sigungu;
-    }
-
-    public void setSigungu(String sigungu) {
-        this.sigungu = sigungu;
-    }
-
-    public int getMonth01() {
-        return month01;
-    }
-
-    public void setMonth01(int month01) {
-        this.month01 = month01;
-    }
-
-    public int getMonth02() {
-        return month02;
-    }
-
-    public void setMonth02(int month02) {
-        this.month02 = month02;
-    }
-
-    public int getMonth03() {
-        return month03;
-    }
-
-    public void setMonth03(int month03) {
-        this.month03 = month03;
-    }
-
-    public int getMonth04() {
-        return month04;
-    }
-
-    public void setMonth04(int month04) {
-        this.month04 = month04;
-    }
-
-    public int getMonth05() {
-        return month05;
-    }
-
-    public void setMonth05(int month05) {
-        this.month05 = month05;
-    }
-
-    public int getMonth06() {
-        return month06;
-    }
-
-    public void setMonth06(int month06) {
-        this.month06 = month06;
-    }
-
-    public int getMonth07() {
-        return month07;
-    }
-
-    public void setMonth07(int month07) {
-        this.month07 = month07;
-    }
-
-    public int getMonth08() {
-        return month08;
-    }
-
-    public void setMonth08(int month08) {
-        this.month08 = month08;
-    }
-
-    public int getMonth09() {
-        return month09;
-    }
-
-    public void setMonth09(int month09) {
-        this.month09 = month09;
-    }
-
-    public int getMonth10() {
-        return month10;
-    }
-
-    public void setMonth10(int month10) {
-        this.month10 = month10;
-    }
-
-    public int getMonth11() {
-        return month11;
-    }
-
-    public void setMonth11(int month11) {
-        this.month11 = month11;
-    }
-
-    public int getMonth12() {
-        return month12;
-    }
-
-    public void setMonth12(int month12) {
-        this.month12 = month12;
-    }
+ 
+    
 }

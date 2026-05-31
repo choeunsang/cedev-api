@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cedev.api.realestate.dto.EntireMonthlyTradeVolumeDto;
+import com.cedev.api.realestate.dto.HousingTradeInfoDto;
 import com.cedev.api.realestate.dto.HousingTradeVolumeDto;
 import com.cedev.api.realestate.dto.HousingTradeVolumeMonthlyDto;
 import com.cedev.api.realestate.dto.RealInfoSearchDto;
@@ -24,6 +26,15 @@ public class RealInfoController {
     public RealInfoController(RealInfoService realInfoService) {
         this.realInfoService = realInfoService;
     }
+    
+    //-------------------------------------------------------------------------------------------
+    // 주택 매매 정보 API
+    //-------------------------------------------------------------------------------------------
+    @GetMapping("/api/housing-trade-info")
+    public List<HousingTradeInfoDto> getHousingTradeInfo(RealInfoSearchDto searchDto) {
+
+        return realInfoService.getHousingTradeInfo(searchDto);
+    }    
 
 
     //-------------------------------------------------------------------------------------------
@@ -74,4 +85,13 @@ public class RealInfoController {
 
         return realInfoService.getSigunguMonthlyTradeVolume(searchDto);
     }
+    
+    //-------------------------------------------------------------------------------------------
+    // 전국 월별 거래량 API
+    //-------------------------------------------------------------------------------------------
+    @GetMapping("/api/housing-trade-volume/entire-monthly")
+    public List<EntireMonthlyTradeVolumeDto> getEntireMonthlyTradeVolume(RealInfoSearchDto searchDto) {
+
+        return realInfoService.getEntireMonthlyTradeVolume(searchDto);
+    }    
 }

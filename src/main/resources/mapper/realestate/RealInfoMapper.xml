@@ -5,6 +5,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="com.cedev.api.realestate.mapper.RealInfoMapper">
 
+    <!-- 주택 매매 정보 API -->
+    <select id="getHousingTradeInfo"
+            resultType="com.cedev.api.realestate.dto.HousingTradeInfoDto">
+        SELECT
+			  city
+			 ,bungi
+			 ,bonBun
+			 ,buBun
+			 ,dangi
+			 
+			 ,dediArea
+			 ,contYear
+			 ,contDate
+			 ,amount
+			 ,floor
+			 
+			 ,consYear
+			 ,road
+			 ,dateCancel
+			 ,transType
+			 ,brokerLoc
+			 
+			 ,regiDt
+			 ,sido
+			 ,sigungu
+			 ,dong
+        FROM KR_REAL_INFO
+        WHERE 1=1        
+        <if test="sido != null and sido != ''">
+            AND sido = #{sido}
+        </if>
+        AND ContYear BETWEEN #{startYearMonth} AND #{endYearMonth}
+		ORDER BY city, bungi, BonBun 
+    </select>
+
     <!-- 주택 매매 거래량 API -->
     <select id="getHousingTradeVolume"
             resultType="com.cedev.api.realestate.dto.HousingTradeVolumeDto">
@@ -132,5 +167,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         GROUP BY sigungu
         ORDER BY sigungu
     </select>
+    
+    <!-- 전국 월별 거래량 API -->
+    <select id="getEntireMonthlyTradeVolume"
+            resultType="com.cedev.api.realestate.dto.EntireMonthlyTradeVolumeDto">
+        SELECT
+            sido,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '01' THEN 1 ELSE 0 END) AS month01,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '02' THEN 1 ELSE 0 END) AS month02,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '03' THEN 1 ELSE 0 END) AS month03,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '04' THEN 1 ELSE 0 END) AS month04,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '05' THEN 1 ELSE 0 END) AS month05,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '06' THEN 1 ELSE 0 END) AS month06,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '07' THEN 1 ELSE 0 END) AS month07,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '08' THEN 1 ELSE 0 END) AS month08,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '09' THEN 1 ELSE 0 END) AS month09,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '10' THEN 1 ELSE 0 END) AS month10,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '11' THEN 1 ELSE 0 END) AS month11,
+            SUM(CASE WHEN RIGHT(ContYear, 2) = '12' THEN 1 ELSE 0 END) AS month12
+        FROM KR_REAL_INFO
+        WHERE 1=1
+          AND ContYear BETWEEN #{startYearMonth} AND #{endYearMonth}
+        GROUP BY sido
+        ORDER BY sido
+    </select>    
 
 </mapper>

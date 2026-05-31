@@ -82,21 +82,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	resultType="com.cedev.api.realestate.dto.RentGbunDto">
     
         SELECT 
-            sigungu, 
+	        <!-- [조치 1] sido가 비어있거나 null이면(전체 선택) sido 컬럼을, 아니면 sigungu 컬럼을 출력 -->
+	        <if test="sido == null or sido == ''">
+	            sido AS regionName,
+	        </if>
+	        <if test="sido != null and sido != ''">
+	            sigungu AS regionName,
+	        </if>
             COUNT(CASE WHEN termGubun = '신규' THEN 1 END) AS newContractCnt, 
             COUNT(CASE WHEN termGubun = '갱신' THEN 1 END) AS renewContractCnt, 
             COUNT(CASE WHEN rightRequ = '사용' THEN 1 END) AS usedRightCnt,
             ROUND((CAST(COUNT(CASE WHEN rightRequ = '사용' THEN 1 END) AS FLOAT) / NULLIF(COUNT(CASE WHEN termGubun = '갱신' THEN 1 END), 0)) * 100, 2)  AS usePercent  
         FROM KR_REAL_RENT_INFO 
         WHERE 1=1 
-        <if test="sido != null and sido != ''">
-            AND sido = #{sido}
-        </if>
-        <if test="year != null and year != ''">
-            AND ContYear BETWEEN CONCAT(#{year}, '01') AND CONCAT(#{year}, '12')
-        </if>        
-        GROUP BY sigungu
-        ORDER BY sigungu ASC
+          <!-- [조치 2] 정상 한글 데이터 및 무효 행 필터링 조건 상시 적용 -->
+	      AND sido IS NOT NULL
+	      AND LEN(sido) &gt;= 2
+	      AND sido LIKE N'[가-힣]%'
+	      AND (termGubun IN ('신규', '갱신') OR rightRequ = '사용')
+	
+	      <!-- [조치 3] 특정 시도를 선택했을 때만 해당 시도로 필터링 (전체 선택 시 이 조건은 패스됨) -->
+	      <if test="sido != null and sido != ''">
+	        AND sido = #{sido}
+	      </if>
+	      
+	      AND ContYear BETWEEN CONCAT(#{year}, '01') AND CONCAT(#{year}, '12')
+	    GROUP BY 
+	        <!-- [조치 4] SELECT 절과 동일하게 GROUP BY 타겟도 동적 분기 처리 -->
+	        <if test="sido == null or sido == ''">
+	            sido
+	        </if>
+	        <if test="sido != null and sido != ''">
+	            sigungu
+	        </if>
+	    ORDER BY regionName ASC
     </select>    
 
 </mapper>
