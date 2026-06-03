@@ -36,6 +36,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="sido != null and sido != ''">
             AND sido = #{sido}
         </if>
+        <if test="sigungu != null and sigungu != ''">
+            AND sigungu = #{sigungu}
+        </if>
+        <if test="dong != null and dong != ''">
+            AND dong = #{dong}
+        </if>        
         AND ContYear BETWEEN #{startYearMonth} AND #{endYearMonth}
 		ORDER BY city, bungi, BonBun 
     </select>

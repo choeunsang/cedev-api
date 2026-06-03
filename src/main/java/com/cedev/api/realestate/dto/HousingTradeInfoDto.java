@@ -29,7 +29,5 @@ public class HousingTradeInfoDto {
 	private String sido;
 	private String sigungu;
 	private String dong;
-    
-
-
+	
 }
