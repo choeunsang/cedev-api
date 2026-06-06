@@ -42,9 +42,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="dong != null and dong != ''">
             AND dong = #{dong}
         </if>        
+        <if test="areaPyeong != null and areaPyeong != ''">
+            AND CAST(ROUND(CAST(dediArea AS FLOAT) * 0.3025, 0) AS INT) = #{areaPyeong}
+        </if>         
         AND ContYear BETWEEN #{startYearMonth} AND #{endYearMonth}
 		ORDER BY city, bungi, BonBun 
     </select>
+    
+    <!-- 주택 매매 가격 평균가 -->
+    <select id="getHousingTradePriceInfo"
+            resultType="com.cedev.api.realestate.dto.HousingTradePriceInfoDto">
+        SELECT
+		      sido
+		     ,sigungu
+		     ,dong    
+		     ,CAST(ROUND(CAST(dediArea AS FLOAT) * 0.3025, 0) AS INT) AS areaPyeong
+		     ,COUNT(*) AS tradCnt
+		     ,AVG(CAST(REPLACE(amount, ',', '') AS BIGINT)) AS AvgPrice
+		     ,MIN(CAST(REPLACE(amount, ',', '') AS BIGINT)) AS MinPrice
+		     ,MAX(CAST(REPLACE(amount, ',', '') AS BIGINT)) AS MaxPrice
+        FROM KR_REAL_INFO
+        WHERE 1=1
+          AND sido = #{sido}
+          AND ContYear BETWEEN #{startYearMonth} AND #{endYearMonth}
+		GROUP BY 
+		    sido, 
+		    sigungu, 
+		    dong,     
+		    CAST(ROUND(CAST(dediArea AS FLOAT) * 0.3025, 0) AS INT)
+		ORDER BY 
+		    sido ASC, 
+		    sigungu ASC, 
+		    dong ASC, 
+		    CAST(ROUND(CAST(dediArea AS FLOAT) * 0.3025, 0) AS INT) ASC
+    </select>      
 
     <!-- 주택 매매 거래량 API -->
     <select id="getHousingTradeVolume"
@@ -197,5 +228,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         GROUP BY sido
         ORDER BY sido
     </select>    
+    
+  
 
 </mapper>

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.cedev.api.realestate.dto.EntireMonthlyTradeVolumeDto;
 import com.cedev.api.realestate.dto.HousingTradeInfoDto;
+import com.cedev.api.realestate.dto.HousingTradePriceInfoDto;
 import com.cedev.api.realestate.dto.HousingTradeVolumeDto;
 import com.cedev.api.realestate.dto.HousingTradeVolumeMonthlyDto;
 import com.cedev.api.realestate.dto.RealInfoSearchDto;
@@ -17,6 +18,8 @@ import com.cedev.api.realestate.dto.SigunguMonthlyTradeVolumeDto;
 public interface RealInfoMapper {
 	
 	List<HousingTradeInfoDto> getHousingTradeInfo(RealInfoSearchDto searchDto);
+	
+	List<HousingTradePriceInfoDto> getHousingTradePriceInfo(RealInfoSearchDto searchDto);
 
     List<HousingTradeVolumeDto> getHousingTradeVolume(RealInfoSearchDto searchDto);
 

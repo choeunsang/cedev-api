@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cedev.api.realestate.dto.EntireMonthlyTradeVolumeDto;
 import com.cedev.api.realestate.dto.HousingTradeInfoDto;
+import com.cedev.api.realestate.dto.HousingTradePriceInfoDto;
 import com.cedev.api.realestate.dto.HousingTradeVolumeDto;
 import com.cedev.api.realestate.dto.HousingTradeVolumeMonthlyDto;
 import com.cedev.api.realestate.dto.RealInfoSearchDto;
@@ -35,6 +36,15 @@ public class RealInfoController {
 
         return realInfoService.getHousingTradeInfo(searchDto);
     }    
+    
+    //-------------------------------------------------------------------------------------------
+    // 주택 매매 가격 평균가
+    //-------------------------------------------------------------------------------------------
+    @GetMapping("/api/housing-tradePrice-info")
+    public List<HousingTradePriceInfoDto> getHousingTradePriceInfo(RealInfoSearchDto searchDto) {
+
+        return realInfoService.getHousingTradePriceInfo(searchDto);
+    }        
 
 
     //-------------------------------------------------------------------------------------------

@@ -18,8 +18,14 @@ public class RealInfoSearchDto {
     private String dong = "";
     private String dangi = "";
     private String dediArea = "";
+    
+    private String areaPyeong = "";
+    
     private String startYearMonth;
     private String endYearMonth;
+    
+    
+    
 
 
 

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.cedev.api.realestate.dto.EntireMonthlyTradeVolumeDto;
 import com.cedev.api.realestate.dto.HousingTradeInfoDto;
+import com.cedev.api.realestate.dto.HousingTradePriceInfoDto;
 import com.cedev.api.realestate.dto.HousingTradeVolumeDto;
 import com.cedev.api.realestate.dto.HousingTradeVolumeMonthlyDto;
 import com.cedev.api.realestate.dto.RealInfoSearchDto;
@@ -33,6 +34,14 @@ public class RealInfoService {
 
         return realInfoMapper.getHousingTradeInfo(searchDto);
     }    
+    
+    //-------------------------------------------------------------------------------------------
+    // 주택 매매 가격 평균가
+    //-------------------------------------------------------------------------------------------
+    public List<HousingTradePriceInfoDto> getHousingTradePriceInfo(RealInfoSearchDto searchDto) {
+
+        return realInfoMapper.getHousingTradePriceInfo(searchDto);
+    }        
 
 
     //-------------------------------------------------------------------------------------------
