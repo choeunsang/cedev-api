@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cedev.api.common.mapper.BaseInfoMapper">
+
+    <!-- 단지 조회 -->
+    <select id="getDangiInfo" resultType="com.cedev.api.common.dto.DangiInfoDto">
+
+			select  
+					 sido
+					,sigungu
+					,dong
+					,dangi
+			        
+			from KR_REAL_INFO kri
+			where 1=1
+	        <if test="sido != null and sido != ''">
+	            AND sido = #{sido}
+	        </if>
+			group by sido, sigungu, dong, dangi
+
+    </select>    
+
+</mapper>
