@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cedev.api.realestate.mapper.TradInfoMapper">
+
+    <!-- 시도 매매 거래량 -->
+    <select id="getTradeVolumeSido" resultType="com.cedev.api.realestate.dto.TradVolumeDto">
+        SELECT sido
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 4) = '2023' THEN 1 ELSE 0 END) AS 'y2023'
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 4) = '2024' THEN 1 ELSE 0 END) AS 'y2024'
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 4) = '2025' THEN 1 ELSE 0 END) AS 'y2025'
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 4) = '2026' THEN 1 ELSE 0 END) AS 'y2026'
+        FROM KR_REAL_INFO
+        WHERE 1=1        
+        <if test="sido != null and sido != ''">
+            AND sido = #{sido}
+        </if>
+        GROUP BY sido
+		ORDER BY sido 
+    </select>
+    
+    <select id="getTradeVolumeSido_Mon" resultType="com.cedev.api.realestate.dto.TradVolumeDto">
+        SELECT sido
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '01') THEN 1 ELSE 0 END) AS m01			 
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '02') THEN 1 ELSE 0 END) AS m02
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '03') THEN 1 ELSE 0 END) AS m03
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '04') THEN 1 ELSE 0 END) AS m04
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '05') THEN 1 ELSE 0 END) AS m05
+			 
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '06') THEN 1 ELSE 0 END) AS m06
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '07') THEN 1 ELSE 0 END) AS m07
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '08') THEN 1 ELSE 0 END) AS m08
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '09') THEN 1 ELSE 0 END) AS m09			 			 
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '10') THEN 1 ELSE 0 END) AS m10			 
+			 
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) =CONCAT( #{year}, '11') THEN 1 ELSE 0 END) AS m11
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '12') THEN 1 ELSE 0 END) AS m12
+        FROM KR_REAL_INFO
+        WHERE 1=1        
+        <if test="sido != null and sido != ''">
+            AND sido = #{sido}            
+        </if>
+        <if test="year != null and year != ''">
+            AND SUBSTRING(ContYear, 1, 4) = #{year}            
+        </if>        
+        GROUP BY sido
+		ORDER BY sido 
+    </select>    
+    
+	<!-- 시군구 매매 거래량 -->
+    <select id="getTradeVolumeSigungu" resultType="com.cedev.api.realestate.dto.TradVolumeDto">
+        SELECT sido
+             , sigungu
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 4) = '2023' THEN 1 ELSE 0 END) AS 'y2023'
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 4) = '2024' THEN 1 ELSE 0 END) AS 'y2024'
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 4) = '2025' THEN 1 ELSE 0 END) AS 'y2025'
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 4) = '2026' THEN 1 ELSE 0 END) AS 'y2026'
+        FROM KR_REAL_INFO
+        WHERE 1=1        
+        <if test="sido != null and sido != ''">
+            AND sido = #{sido}
+        </if>
+        GROUP BY sido, sigungu
+		ORDER BY sido, sigungu 
+    </select>
+    
+    <select id="getTradeVolumeSigungu_Mon" resultType="com.cedev.api.realestate.dto.TradVolumeDto">
+        SELECT sido
+             , sigungu        
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '01') THEN 1 ELSE 0 END) AS m01			 
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '02') THEN 1 ELSE 0 END) AS m02
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '03') THEN 1 ELSE 0 END) AS m03
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '04') THEN 1 ELSE 0 END) AS m04
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '05') THEN 1 ELSE 0 END) AS m05
+			 
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '06') THEN 1 ELSE 0 END) AS m06
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '07') THEN 1 ELSE 0 END) AS m07
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '08') THEN 1 ELSE 0 END) AS m08
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '09') THEN 1 ELSE 0 END) AS m09			 			 
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '10') THEN 1 ELSE 0 END) AS m10			 
+			 
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) =CONCAT( #{year}, '11') THEN 1 ELSE 0 END) AS m11
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 6) = CONCAT(#{year}, '12') THEN 1 ELSE 0 END) AS m12
+        FROM KR_REAL_INFO
+        WHERE 1=1        
+        <if test="sido != null and sido != ''">
+            AND sido = #{sido}            
+        </if>
+        <if test="year != null and year != ''">
+            AND SUBSTRING(ContYear, 1, 4) = #{year}            
+        </if>        
+        GROUP BY sido, sigungu
+		ORDER BY sido, sigungu 
+    </select>      
+
+	<!-- 동 매매 거래량 -->
+    <select id="getTradeVolumeDong" resultType="com.cedev.api.realestate.dto.TradVolumeDto">
+        SELECT sido
+		     , sigungu
+	         , dong        
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 4) = '2023' THEN 1 ELSE 0 END) AS 'y2023'
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 4) = '2024' THEN 1 ELSE 0 END) AS 'y2024'
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 4) = '2025' THEN 1 ELSE 0 END) AS 'y2025'
+			 , SUM(CASE WHEN SUBSTRING(ContYear, 1, 4) = '2026' THEN 1 ELSE 0 END) AS 'y2026'
+        FROM KR_REAL_INFO
+        WHERE 1=1        
+        <if test="sido != null and sido != ''">
+            AND sido = #{sido}
+        </if>
+        GROUP BY sido, sigungu, dong
+		ORDER BY sido, sigungu, dong 
+    </select>
+
+</mapper>
