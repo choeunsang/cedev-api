@@ -14,4 +14,7 @@ public class DangiInfoDto {
 	private String sigungu;
 	private String dong;
 	private String dangi;
+	
+    private String startYearMonth;
+    private String endYearMonth;
 }

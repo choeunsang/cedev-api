@@ -10,9 +10,7 @@ import lombok.ToString;
 
 public class RealInfoSearchDto {
 
-    //-------------------------------------------------------------------------------------------
-    // Declare and initialize variables
-    //-------------------------------------------------------------------------------------------
+
     private String sido;
     private String sigungu = "";
     private String dong = "";

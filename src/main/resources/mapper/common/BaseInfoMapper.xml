@@ -19,8 +19,58 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	        <if test="sido != null and sido != ''">
 	            AND sido = #{sido}
 	        </if>
-			group by sido, sigungu, dong, dangi
+        <if test="sigungu != null and sigungu != ''">
+            AND sigungu = #{sigungu}
+        </if>
+        <if test="dong != null and dong != ''">
+            AND dong = #{dong}
+        </if>	        
+        AND ContYear BETWEEN #{startYearMonth} AND #{endYearMonth}        
+		group by sido, sigungu, dong, dangi
 
+    </select>    
+    
+    <!-- 주택 매매 정보 API -->
+    <select id="getDangiDetailInfo" resultType="com.cedev.api.realestate.dto.HousingTradeInfoDto">
+        SELECT
+			  city
+			 ,bungi
+			 ,bonBun
+			 ,buBun
+			 ,dangi
+			 
+			 ,dediArea
+			 ,contYear
+			 ,contDate
+			 ,amount
+			 ,floor
+			 
+			 ,consYear
+			 ,road
+			 ,dateCancel
+			 ,transType
+			 ,brokerLoc
+			 
+			 ,regiDt
+			 ,sido
+			 ,sigungu
+			 ,dong
+        FROM KR_REAL_INFO
+        WHERE 1=1        
+        <if test="sido != null and sido != ''">
+            AND sido = #{sido}
+        </if>
+        <if test="sigungu != null and sigungu != ''">
+            AND sigungu = #{sigungu}
+        </if>
+        <if test="dong != null and dong != ''">
+            AND dong = #{dong}
+        </if>        
+        <if test="dangi != null and dangi != ''">
+            AND dangi = #{dangi}
+        </if>         
+        AND ContYear BETWEEN #{startYearMonth} AND #{endYearMonth}
+		ORDER BY city, bungi, BonBun 
     </select>    
 
 </mapper>

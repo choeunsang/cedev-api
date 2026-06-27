@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="com.cedev.api.realestate.mapper.RealInfoMapper">
 
-    <!-- 주택 매매 정보 API -->
+    <!-- 주택 매매 정보 -->
     <select id="getHousingTradeInfo"
             resultType="com.cedev.api.realestate.dto.HousingTradeInfoDto">
         SELECT
@@ -77,7 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		    CAST(ROUND(CAST(dediArea AS FLOAT) * 0.3025, 0) AS INT) ASC
     </select>      
 
-    <!-- 주택 매매 거래량 API -->
+    <!-- 주택 매매 거래량 -->
     <select id="getHousingTradeVolume"
             resultType="com.cedev.api.realestate.dto.HousingTradeVolumeDto">
         SELECT
@@ -100,7 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 
-    <!-- 주택 거래량 월별 합계 API -->
+    <!-- 주택 거래량 월별 합계  -->
     <select id="getHousingTradeVolumeMonthly"
             resultType="com.cedev.api.realestate.dto.HousingTradeVolumeMonthlyDto">
         SELECT
@@ -120,7 +120,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 
-    <!-- 최근 거래건 API -->
+    <!-- 최근 거래건 -->
     <select id="getRecentTransactions"
             resultType="com.cedev.api.realestate.dto.RecentTransactionDto">
         SELECT DISTINCT
@@ -149,7 +149,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 
-    <!-- 부동산 상세 평균 거래금액 API -->
+    <!-- 부동산 상세 평균 거래금액 -->
     <select id="getRealEstateDetail"
             resultType="com.cedev.api.realestate.dto.RealEstateDetailDto">
         SELECT
@@ -181,7 +181,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 
-    <!-- 시군구별 월별 거래량 API -->
+    <!-- 시군구별 월별 거래량 -->
     <select id="getSigunguMonthlyTradeVolume"
             resultType="com.cedev.api.realestate.dto.SigunguMonthlyTradeVolumeDto">
         SELECT
@@ -205,7 +205,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ORDER BY sigungu
     </select>
     
-    <!-- 전국 월별 거래량 API -->
+    <!-- 전국 월별 거래량 -->
     <select id="getEntireMonthlyTradeVolume"
             resultType="com.cedev.api.realestate.dto.EntireMonthlyTradeVolumeDto">
         SELECT
