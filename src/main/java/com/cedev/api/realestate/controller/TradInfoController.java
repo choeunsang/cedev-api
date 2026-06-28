@@ -51,6 +51,11 @@ public class TradInfoController {
 
         return tradInfoService.getTradeVolumeDong(searchDto);
     }        
-    
+
+    @GetMapping("/api/housTrad/VolInfo-dong-mon")
+    public List<TradVolumeDto> getTradeVolumeDong_Mon(TradInfoSearchDto searchDto) {
+
+        return tradInfoService.getTradeVolumeDong_Mon(searchDto);
+    }            
 
 }

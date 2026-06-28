@@ -6,8 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.cedev.api.realestate.mapper.RealInfoMapper">
 
     <!-- 주택 매매 정보 -->
-    <select id="getHousingTradeInfo"
-            resultType="com.cedev.api.realestate.dto.HousingTradeInfoDto">
+    <select id="getHousingTradeInfo" resultType="com.cedev.api.realestate.dto.HousingTradeInfoDto">
         SELECT
 			  city
 			 ,bungi
@@ -45,7 +44,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="areaPyeong != null and areaPyeong != ''">
             AND CAST(ROUND(CAST(dediArea AS FLOAT) * 0.3025, 0) AS INT) = #{areaPyeong}
         </if>         
-        AND ContYear BETWEEN #{startYearMonth} AND #{endYearMonth}
+        <if test="year != null and year != ''">
+            AND SUBSTRING(contyear, 1, 4) = #{year}
+        </if>          
+        <if test="startYearMonth != null and startYearMonth != '' and endYearMonth != '' and endYearMonth != ''">
+        	AND ContYear BETWEEN #{startYearMonth} AND #{endYearMonth}
+        </if>          
+
 		ORDER BY city, bungi, BonBun 
     </select>
     

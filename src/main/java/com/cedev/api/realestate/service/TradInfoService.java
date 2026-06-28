@@ -45,5 +45,10 @@ public class TradInfoService {
         return tradInfoMapper.getTradeVolumeDong(searchDto);
     }        
     
+    public List<TradVolumeDto> getTradeVolumeDong_Mon(TradInfoSearchDto searchDto) {
+
+        return tradInfoMapper.getTradeVolumeDong_Mon(searchDto);
+    }          
+    
 
 }

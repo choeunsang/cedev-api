@@ -19,6 +19,7 @@ public class RealInfoSearchDto {
     
     private String areaPyeong = "";
     
+    private String year;
     private String startYearMonth;
     private String endYearMonth;
     

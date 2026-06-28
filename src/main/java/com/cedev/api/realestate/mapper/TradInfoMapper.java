@@ -20,6 +20,8 @@ public interface TradInfoMapper {
 	List<TradVolumeDto> getTradeVolumeSigungu_Mon(TradInfoSearchDto searchDto);
 	
 	List<TradVolumeDto> getTradeVolumeDong(TradInfoSearchDto searchDto);
+	
+	List<TradVolumeDto> getTradeVolumeDong_Mon(TradInfoSearchDto searchDto);
 
 
 }
