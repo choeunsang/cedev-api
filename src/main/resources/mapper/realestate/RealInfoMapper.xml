@@ -41,9 +41,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="dong != null and dong != ''">
             AND dong = #{dong}
         </if>        
+        <if test="dangi != null and dangi != ''">
+            AND dangi = #{dangi}
+        </if>               
         <if test="areaPyeong != null and areaPyeong != ''">
             AND CAST(ROUND(CAST(dediArea AS FLOAT) * 0.3025, 0) AS INT) = #{areaPyeong}
         </if>         
+        <if test="dediArea != null and dediArea != ''">
+            AND dediArea = #{dediArea}
+        </if>                           
         <if test="year != null and year != ''">
             AND SUBSTRING(contyear, 1, 4) = #{year}
         </if>          
