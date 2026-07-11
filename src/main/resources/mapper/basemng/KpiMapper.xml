@@ -33,50 +33,69 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="getTargetInfoList"
 		parameterType="com.cedev.api.basemng.dto.TargetSearchDto" 
     	resultType="com.cedev.api.basemng.dto.TargetInfoDto">
-		   SELECT 
-		        WAVE_NM AS waveNm,
-		        ISNULL([FAB_IN], 0)  AS fabIn,
-		        ISNULL([B_1st], 0)   AS b1st,
-		        ISNULL([B_2st], 0)   AS b2st,
-		        ISNULL([B3st], 0)    AS b3st,
-		        
-		        ISNULL([B4st], 0)    AS b4st,
-		        ISNULL([B5st], 0)    AS b5st,
-		        ISNULL([PGIN], 0)    AS pgin,
-		        ISNULL([A_1st], 0)   AS a1st,
-		        ISNULL([A_2st], 0)   AS a2st,
-		        
-		        ISNULL([A_3st], 0)   AS a3st,
-		        ISNULL([A_4st], 0)   AS a4st,
-		        ISNULL([A_5st], 0)   AS a5st,
-		        ISNULL([FAB_OUT], 0) AS fabOut
-		    FROM (
-		        -- 기준 정보 조합에 선택한 년도의 실제 목표 데이터를 매핑
-		        SELECT 
-		            w.WAVE_NM, 
-		            p.PU_NM, 
-		            ISNULL(t.TARGET_VAL, 0) AS TARGET_VAL
-		        FROM TB_WAVE_INFO w
-		        CROSS JOIN TB_PU_INFO p
-		        LEFT JOIN TB_KPI_TARGET t 
-		            ON w.WAVE_CD = t.WAVE_CD 
-		           AND p.PU_CD = t.PU_CD
-		          
-		    ) AS SourceTable
-		    PIVOT (
-		        SUM(TARGET_VAL)
-		        FOR PU_NM IN (
-		            [FAB_IN], [B_1st], [B_2st], [B3st], [B4st], [B5st], 
-		            [PGIN], [A_1st], [A_2st], [A_3st], [A_4st], [A_5st], [FAB_OUT]
-		        )
-		    ) AS PivotTable
-		    ORDER BY CASE WAVE_NM 
-		        WHEN 'EUV' THEN 1 WHEN 'Arf_I' THEN 2 WHEN 'Arf_F' THEN 3 
-		        WHEN 'GUV' THEN 4 WHEN 'OUV' THEN 5 WHEN 'SUV' THEN 6 WHEN 'RUV' THEN 7 
-		    END
+    	
+    	
+	SELECT 
+	    W.WAVE_NM AS waveNm,
+	    ISNULL(T.P_BIN, 0)   AS fabIn,  
+	    ISNULL(T.B1ST, 0)    AS b1st,
+	    ISNULL(T.B2ND, 0)    AS b2st,
+	    ISNULL(T.B3RD, 0)    AS b3st,
+	    ISNULL(T.B4TH, 0)    AS b4st,
+	    ISNULL(T.B5TH, 0)    AS b5st,
+	    ISNULL(T.P_GM, 0)    AS pgin,   
+	    ISNULL(T.A1ST, 0)    AS a1st,
+	    ISNULL(T.A2ND, 0)    AS a2st,
+	    ISNULL(T.A3RD, 0)    AS a3st,
+	    ISNULL(T.A4TH, 0)    AS a4st,
+	    ISNULL(T.A5TH, 0)    AS a5st,
+	    ISNULL(T.F_ABOUT, 0) AS fabOut  
+	FROM TB_WAVE_INFO W  
+	LEFT JOIN TB_KPI_TARGET T 
+	    ON W.WAVE_CD = T.WAVE_CD 
+	   AND T.KPI_YEAR = #{year}
+	ORDER BY CASE W.WAVE_CD 
+	    WHEN 'EUV' THEN 1 
+	    WHEN 'Arf_I' THEN 2 
+	    WHEN 'Arf_F' THEN 3 
+	    WHEN 'GUV' THEN 4 
+	    WHEN 'OUV' THEN 5 
+	    WHEN 'SUV' THEN 6 
+	    WHEN 'RUV' THEN 7 
+	END;
+
+
 
     </select>        
-
+    
+    <!--
+			SELECT 
+			    WAVE_CD AS waveNm,
+			    ISNULL(P_BIN, 0)   AS fabIn,  
+			    ISNULL(B1ST, 0)    AS b1st,
+			    ISNULL(B2ND, 0)    AS b2st,
+			    ISNULL(B3RD, 0)    AS b3st,
+			    ISNULL(B4TH, 0)    AS b4st,
+			    ISNULL(B5TH, 0)    AS b5st,
+			    ISNULL(P_GM, 0)    AS pgin,   
+			    ISNULL(A1ST, 0)    AS a1st,
+			    ISNULL(A2ND, 0)    AS a2st,
+			    ISNULL(A3RD, 0)    AS a3st,
+			    ISNULL(A4TH, 0)    AS a4st,
+			    ISNULL(A5TH, 0)    AS a5st,
+			    ISNULL(F_ABOUT, 0) AS fabOut  
+			FROM TB_KPI_TARGET
+			WHERE KPI_YEAR = #{year}
+			ORDER BY CASE WAVE_CD 
+			    WHEN 'EUV' THEN 1 
+			    WHEN 'Arf_I' THEN 2 
+			    WHEN 'Arf_F' THEN 3 
+			    WHEN 'GUV' THEN 4 
+			    WHEN 'OUV' THEN 5 
+			    WHEN 'SUV' THEN 6 
+			    WHEN 'RUV' THEN 7 
+			END;    
+-->
 
     <select id="getKpiInfoList"
 		parameterType="com.cedev.api.basemng.dto.KpiSearchDto" 

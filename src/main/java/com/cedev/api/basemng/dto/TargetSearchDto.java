@@ -9,7 +9,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class TargetSearchDto {
-    //
+	
+	private String year;   
+	
     private String puCd;        
     private String puNm;        
 
