@@ -1,6 +1,7 @@
 package com.cedev.api.basemng.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -33,5 +34,9 @@ public interface KpiInfoMapper {
 	
 	List<KpiInfoDto> getKpiInfoList(KpiSearchDto searchDto);
 
+    int upsertKpiTarget(Map<String, Object> param);
+    
+    //int insertKpiHistMaster(Map<String, Object> param);
+    //int insertKpiHistDetailSnapshot(Map<String, Object> param);	
 
 }

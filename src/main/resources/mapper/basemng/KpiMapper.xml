@@ -35,21 +35,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	resultType="com.cedev.api.basemng.dto.TargetInfoDto">
     	
     	
-	SELECT 
+	SELECT
+	     #{year} AS year,
+	    W.WAVE_CD AS waveCd, 
 	    W.WAVE_NM AS waveNm,
-	    ISNULL(T.P_BIN, 0)   AS fabIn,  
+	    ISNULL(T.FAB_IN, 0)   AS fabIn,  
 	    ISNULL(T.B1ST, 0)    AS b1st,
-	    ISNULL(T.B2ND, 0)    AS b2st,
-	    ISNULL(T.B3RD, 0)    AS b3st,
-	    ISNULL(T.B4TH, 0)    AS b4st,
-	    ISNULL(T.B5TH, 0)    AS b5st,
-	    ISNULL(T.P_GM, 0)    AS pgin,   
+	    ISNULL(T.B2ST, 0)    AS b2st,
+	    ISNULL(T.B3ST, 0)    AS b3st,
+	    ISNULL(T.B4ST, 0)    AS b4st,
+	    ISNULL(T.B5ST, 0)    AS b5st,
+	    ISNULL(T.PG_IN, 0)    AS pgin,   
 	    ISNULL(T.A1ST, 0)    AS a1st,
-	    ISNULL(T.A2ND, 0)    AS a2st,
-	    ISNULL(T.A3RD, 0)    AS a3st,
-	    ISNULL(T.A4TH, 0)    AS a4st,
-	    ISNULL(T.A5TH, 0)    AS a5st,
-	    ISNULL(T.F_ABOUT, 0) AS fabOut  
+	    ISNULL(T.A2ST, 0)    AS a2st,
+	    ISNULL(T.A3ST, 0)    AS a3st,
+	    ISNULL(T.A4ST, 0)    AS a4st,
+	    ISNULL(T.A5ST, 0)    AS a5st,
+	    ISNULL(T.FAB_OUT, 0) AS fabOut  
 	FROM TB_WAVE_INFO W  
 	LEFT JOIN TB_KPI_TARGET T 
 	    ON W.WAVE_CD = T.WAVE_CD 
@@ -131,6 +133,88 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
           order by kpicd asc
 
     </select>  
+    
+    <!-- [1단계] 메인 마스터 타겟 정보 MERGE 처리 (수정된 ST 스키마 버전) -->
+    <update id="upsertKpiTarget" parameterType="map">
+        MERGE INTO cedevdb.dbo.TB_KPI_TARGET AS Target
+        USING (SELECT #{year} AS KPI_YEAR, #{row.waveCd} AS WAVE_CD) AS Source
+        ON (Target.KPI_YEAR = Source.KPI_YEAR AND Target.WAVE_CD = Source.WAVE_CD)
+        
+        
+        WHEN MATCHED THEN
+            UPDATE SET 
+                FAB_IN   = TRY_CAST(ISNULL(#{row.fabIn}, '0') AS NUMERIC(18,2)),
+                B1ST     = TRY_CAST(ISNULL(#{row.b1st}, '0') AS NUMERIC(18,2)),
+                B2ST     = TRY_CAST(ISNULL(#{row.b2st}, '0') AS NUMERIC(18,2)), 
+                B3ST     = TRY_CAST(ISNULL(#{row.b3st}, '0') AS NUMERIC(18,2)), 
+                B4ST     = TRY_CAST(ISNULL(#{row.b4st}, '0') AS NUMERIC(18,2)), 
+                B5ST     = TRY_CAST(ISNULL(#{row.b5st}, '0') AS NUMERIC(18,2)), 
+                PG_IN    = TRY_CAST(ISNULL(#{row.pgin}, '0') AS NUMERIC(18,2)),
+                A1ST     = TRY_CAST(ISNULL(#{row.a1st}, '0') AS NUMERIC(18,2)),
+                A2ST     = TRY_CAST(ISNULL(#{row.a2st}, '0') AS NUMERIC(18,2)), 
+                A3ST     = TRY_CAST(ISNULL(#{row.a3st}, '0') AS NUMERIC(18,2)), 
+                A4ST     = TRY_CAST(ISNULL(#{row.a4st}, '0') AS NUMERIC(18,2)), 
+                A5ST     = TRY_CAST(ISNULL(#{row.a5st}, '0') AS NUMERIC(18,2)), 
+                FAB_OUT  = TRY_CAST(ISNULL(#{row.fabOut}, '0') AS NUMERIC(18,2)), 
+                MOD_DT   = GETDATE(),
+                MOD_USER = #{userId}
+
+        
+        WHEN NOT MATCHED THEN
+            INSERT (
+                KPI_YEAR, WAVE_CD, FAB_IN, 
+                B1ST, B2ST, B3ST, B4ST, B5ST, 
+                PG_IN, 
+                A1ST, A2ST, A3ST, A4ST, A5ST, 
+                FAB_OUT, REG_DT, REG_USER
+            )
+            VALUES (
+                Source.KPI_YEAR, 
+                Source.WAVE_CD, 
+                TRY_CAST(ISNULL(#{row.fabIn}, '0') AS NUMERIC(18,2)), 
+                TRY_CAST(ISNULL(#{row.b1st}, '0') AS NUMERIC(18,2)), 
+                TRY_CAST(ISNULL(#{row.b2st}, '0') AS NUMERIC(18,2)), 
+                TRY_CAST(ISNULL(#{row.b3st}, '0') AS NUMERIC(18,2)), 
+                TRY_CAST(ISNULL(#{row.b4st}, '0') AS NUMERIC(18,2)), 
+                TRY_CAST(ISNULL(#{row.b5st}, '0') AS NUMERIC(18,2)), 
+                TRY_CAST(ISNULL(#{row.pgin}, '0') AS NUMERIC(18,2)), 
+                TRY_CAST(ISNULL(#{row.a1st}, '0') AS NUMERIC(18,2)), 
+                TRY_CAST(ISNULL(#{row.a2st}, '0') AS NUMERIC(18,2)), 
+                TRY_CAST(ISNULL(#{row.a3st}, '0') AS NUMERIC(18,2)), 
+                TRY_CAST(ISNULL(#{row.a4st}, '0') AS NUMERIC(18,2)), 
+                TRY_CAST(ISNULL(#{row.a5st}, '0') AS NUMERIC(18,2)), 
+                TRY_CAST(ISNULL(#{row.fabOut}, '0') AS NUMERIC(18,2)), 
+                GETDATE(), 
+                #{userId}
+            );
+    </update>
+    
+
+
+    <!-- [2단계] 이력 기록용 마스터 정보 등록 -->
+    <insert id="insertKpiHistMaster" parameterType="map">
+        INSERT INTO TB_KPI_TARGET_HIST (
+            HIST_ID, KPI_YEAR, REASON, REG_ID, REG_DT
+        )
+        VALUES (
+            #{histId}, #{year}, #{reason}, #{userId}, GETDATE()
+        )
+    </insert>
+
+    <!-- [3단계] 이력 상세 정보 일괄 고속 스냅샷 복사 (SELECT INSERT 구조) -->
+    <insert id="insertKpiHistDetailSnapshot" parameterType="map">
+        INSERT INTO TB_KPI_TARGET_HIST_DETAIL (
+            HIST_ID, WAVE_CD, 
+            P_BIN, B1ST, B2ND, B3RD, B4TH, B5TH, 
+            P_GM, A1ST, A2ND, A3RD, A4TH, A5TH, F_ABOUT
+        )
+        SELECT 
+            #{histId}, T.WAVE_CD,
+            T.P_BIN, T.B1ST, T.B2ND, T.B3RD, T.B4TH, T.B5TH,
+            T.P_GM, T.A1ST, T.A2ND, T.A3RD, T.A4TH, T.A5TH, T.F_ABOUT
+        FROM TB_KPI_TARGET T
+        WHERE T.KPI_YEAR = #{year}
+    </insert>    
 
 
 </mapper>
