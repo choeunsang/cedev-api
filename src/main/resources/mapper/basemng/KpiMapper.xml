@@ -28,6 +28,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM TB_PU_INFO
         WHERE 1 = 1
 
+    </select>
+    
+	<select id="getSectInfoList"
+		parameterType="com.cedev.api.basemng.dto.SectSearchDto" 
+    	resultType="com.cedev.api.basemng.dto.SectInfoDto">
+        SELECT
+             cd,
+             nm
+
+        FROM TB_SECT_INF
+        WHERE 1 = 1
+
     </select>    
     
     <select id="getTargetInfoList"
@@ -136,7 +148,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <!-- [1단계] 메인 마스터 타겟 정보 MERGE 처리 (수정된 ST 스키마 버전) -->
     <update id="upsertKpiTarget" parameterType="map">
-        MERGE INTO cedevdb.dbo.TB_KPI_TARGET AS Target
+        MERGE INTO TB_KPI_TARGET AS Target
         USING (SELECT #{year} AS KPI_YEAR, #{row.waveCd} AS WAVE_CD) AS Source
         ON (Target.KPI_YEAR = Source.KPI_YEAR AND Target.WAVE_CD = Source.WAVE_CD)
         

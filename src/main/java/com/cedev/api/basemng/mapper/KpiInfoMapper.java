@@ -9,6 +9,8 @@ import com.cedev.api.basemng.dto.KpiInfoDto;
 import com.cedev.api.basemng.dto.KpiSearchDto;
 import com.cedev.api.basemng.dto.PuInfoDto;
 import com.cedev.api.basemng.dto.PuSearchDto;
+import com.cedev.api.basemng.dto.SectInfoDto;
+import com.cedev.api.basemng.dto.SectSearchDto;
 import com.cedev.api.basemng.dto.TargetInfoDto;
 import com.cedev.api.basemng.dto.TargetSearchDto;
 import com.cedev.api.basemng.dto.WaveInfoDto;
@@ -29,6 +31,8 @@ public interface KpiInfoMapper {
 	List<WaveInfoDto> getWaveInfoList(WaveSearchDto searchDto);
 	
 	List<PuInfoDto> getPuInfoList(PuSearchDto searchDto);
+	
+	List<SectInfoDto> getSectInfoList(SectSearchDto searchDto);
 	
 	List<TargetInfoDto> getTargetInfoList(TargetSearchDto searchDto);
 	

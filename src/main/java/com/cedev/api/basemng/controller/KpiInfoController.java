@@ -13,6 +13,8 @@ import com.cedev.api.basemng.dto.KpiInfoDto;
 import com.cedev.api.basemng.dto.KpiSearchDto;
 import com.cedev.api.basemng.dto.PuInfoDto;
 import com.cedev.api.basemng.dto.PuSearchDto;
+import com.cedev.api.basemng.dto.SectInfoDto;
+import com.cedev.api.basemng.dto.SectSearchDto;
 import com.cedev.api.basemng.dto.TargetInfoDto;
 import com.cedev.api.basemng.dto.TargetSaveDto;
 import com.cedev.api.basemng.dto.TargetSearchDto;
@@ -62,10 +64,19 @@ public class KpiInfoController {
 
         return kpiInfoService.getPuInfoList(searchDto);
     }        
+    
+    //-------------------------------------------------------------------------------------------
+    // Section
+    //-------------------------------------------------------------------------------------------
+    @GetMapping("/api/basemng-section-info")
+    public List<SectInfoDto> getSectInfoList(SectSearchDto searchDto) {
+
+        return kpiInfoService.getSectInfoList(searchDto);
+    }      
 
 
     //-------------------------------------------------------------------------------------------
-    // targer
+    // target
     //-------------------------------------------------------------------------------------------
     @GetMapping("/api/basemng-target-info")
     public List<TargetInfoDto> getTargetInfoList(TargetSearchDto searchDto) {
