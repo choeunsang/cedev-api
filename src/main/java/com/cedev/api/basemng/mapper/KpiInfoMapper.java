@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.cedev.api.basemng.dto.KpiInfoDto;
 import com.cedev.api.basemng.dto.KpiSearchDto;
+import com.cedev.api.basemng.dto.LotInfoDto;
+import com.cedev.api.basemng.dto.LotSearchDto;
 import com.cedev.api.basemng.dto.PuInfoDto;
 import com.cedev.api.basemng.dto.PuSearchDto;
 import com.cedev.api.basemng.dto.SectInfoDto;
@@ -33,6 +35,8 @@ public interface KpiInfoMapper {
 	List<PuInfoDto> getPuInfoList(PuSearchDto searchDto);
 	
 	List<SectInfoDto> getSectInfoList(SectSearchDto searchDto);
+	
+	List<LotInfoDto> getLotInfoList(LotSearchDto searchDto);
 	
 	List<TargetInfoDto> getTargetInfoList(TargetSearchDto searchDto);
 	

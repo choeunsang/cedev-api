@@ -5,6 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="com.cedev.api.basemng.mapper.KpiInfoMapper">
 
+	<!-- 기준정보  ============================================================================================== -->
     
     <select id="getWaveInfoList"
 		parameterType="com.cedev.api.basemng.dto.WaveSearchDto" 
@@ -42,65 +43,75 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </select>    
     
+    <!-- 대쉬보드 ============================================================================================== -->
+    
+	<select id="getLotInfoList"
+		parameterType="com.cedev.api.basemng.dto.LotSearchDto" 
+    	resultType="com.cedev.api.basemng.dto.LotInfoDto">
+    	
+		SELECT A.LOT_ID as lotId
+		     , A.STD_DT as stdDt
+		     , A.OPER as oper
+		         
+		     , MAX(CASE WHEN B.OPER = '00' THEN B.OPER_START_TM END) AS tPgIn                       
+		     , MAX(CASE WHEN B.OPER = '01' THEN B.OPER_START_TM END) AS tNoGwang                  
+		     , MAX(CASE WHEN B.OPER = '02' THEN B.OPER_START_TM END) AS t1stA             
+		     , MAX(CASE WHEN B.OPER = '03' THEN B.OPER_START_TM END) AS t1stA2             
+		     , MAX(CASE WHEN B.OPER = '04' THEN B.OPER_START_TM END) AS t1stB             
+		     , MAX(CASE WHEN B.OPER = '05' THEN B.OPER_START_TM END) AS t1stB2             
+		     , MAX(CASE WHEN B.OPER = '06' THEN B.OPER_START_TM END) AS t2nd             
+		     , MIN(CASE WHEN B.OPER IN ('07', '08') THEN B.OPER_START_TM END) AS tAdd              
+		     , MAX(CASE WHEN B.OPER = '09' THEN B.OPER_START_TM END) AS [end]
+		     
+		     , ROUND(CAST(DATEDIFF(MINUTE, MAX(CASE WHEN B.OPER = '00' THEN B.OPER_START_TM END), MAX(CASE WHEN B.OPER = '01' THEN B.OPER_START_TM END)) AS FLOAT) / 1440.0, 2) AS vPgIn
+		     , ROUND(CAST(DATEDIFF(MINUTE, MAX(CASE WHEN B.OPER = '01' THEN B.OPER_START_TM END), MAX(CASE WHEN B.OPER = '02' THEN B.OPER_START_TM END)) AS FLOAT) / 1440.0, 2) AS vNoGwang
+		     , ROUND(CAST(DATEDIFF(MINUTE, MAX(CASE WHEN B.OPER = '02' THEN B.OPER_START_TM END), MAX(CASE WHEN B.OPER = '03' THEN B.OPER_START_TM END)) AS FLOAT) / 1440.0, 2) AS v1stA
+		     , ROUND(CAST(DATEDIFF(MINUTE, MAX(CASE WHEN B.OPER = '03' THEN B.OPER_START_TM END), MAX(CASE WHEN B.OPER = '04' THEN B.OPER_START_TM END)) AS FLOAT) / 1440.0, 2) AS v1stA2
+		     , ROUND(CAST(DATEDIFF(MINUTE, MAX(CASE WHEN B.OPER = '04' THEN B.OPER_START_TM END), MAX(CASE WHEN B.OPER = '05' THEN B.OPER_START_TM END)) AS FLOAT) / 1440.0, 2) AS v1stB
+		     , ROUND(CAST(DATEDIFF(MINUTE, MAX(CASE WHEN B.OPER = '05' THEN B.OPER_START_TM END), MAX(CASE WHEN B.OPER = '06' THEN B.OPER_START_TM END)) AS FLOAT) / 1440.0, 2) AS v1stB2
+		     , ROUND(CAST(DATEDIFF(MINUTE, MAX(CASE WHEN B.OPER = '06' THEN B.OPER_START_TM END), MIN(CASE WHEN B.OPER IN ('07', '08') THEN B.OPER_START_TM END)) AS FLOAT) / 1440.0, 2) AS v2nd
+		     , ROUND(CAST(DATEDIFF(MINUTE, MIN(CASE WHEN B.OPER IN ('07', '08') THEN B.OPER_START_TM END), MAX(CASE WHEN B.OPER = '09' THEN B.OPER_START_TM END)) AS FLOAT) / 1440.0, 2) AS vAdd
+		     
+		     , A.LOT_CREATE_TM as lotCreateTm
+		     , A.LOT_OUT_TM as lotOutTm
+		FROM TB_LOT A
+		INNER JOIN TB_LOT_HISTORY B 
+		    ON A.LOT_ID = B.LOT_ID 
+		    AND B.OPER <![CDATA[ <= ]]>  A.OPER   
+		GROUP BY A.LOT_ID, A.STD_DT, A.OPER, A.LOT_CREATE_TM, A.LOT_OUT_TM
+		ORDER BY A.LOT_ID
+
+    </select>       
+    
+    <!-- 목표관리 ============================================================================================== -->
+    
     <select id="getTargetInfoList"
 		parameterType="com.cedev.api.basemng.dto.TargetSearchDto" 
     	resultType="com.cedev.api.basemng.dto.TargetInfoDto">
     	
     	
-	SELECT
-	     #{year} AS year,
-	    W.WAVE_CD AS waveCd, 
-	    W.WAVE_NM AS waveNm,
-	    ISNULL(T.FAB_IN, 0)   AS fabIn,  
-	    ISNULL(T.B1ST, 0)    AS b1st,
-	    ISNULL(T.B2ST, 0)    AS b2st,
-	    ISNULL(T.B3ST, 0)    AS b3st,
-	    ISNULL(T.B4ST, 0)    AS b4st,
-	    ISNULL(T.B5ST, 0)    AS b5st,
-	    ISNULL(T.PG_IN, 0)    AS pgin,   
-	    ISNULL(T.A1ST, 0)    AS a1st,
-	    ISNULL(T.A2ST, 0)    AS a2st,
-	    ISNULL(T.A3ST, 0)    AS a3st,
-	    ISNULL(T.A4ST, 0)    AS a4st,
-	    ISNULL(T.A5ST, 0)    AS a5st,
-	    ISNULL(T.FAB_OUT, 0) AS fabOut  
-	FROM TB_WAVE_INFO W  
-	LEFT JOIN TB_KPI_TARGET T 
-	    ON W.WAVE_CD = T.WAVE_CD 
-	   AND T.KPI_YEAR = #{year}
-	ORDER BY CASE W.WAVE_CD 
-	    WHEN 'EUV' THEN 1 
-	    WHEN 'Arf_I' THEN 2 
-	    WHEN 'Arf_F' THEN 3 
-	    WHEN 'GUV' THEN 4 
-	    WHEN 'OUV' THEN 5 
-	    WHEN 'SUV' THEN 6 
-	    WHEN 'RUV' THEN 7 
-	END;
-
-
-
-    </select>        
-    
-    <!--
-			SELECT 
-			    WAVE_CD AS waveNm,
-			    ISNULL(P_BIN, 0)   AS fabIn,  
-			    ISNULL(B1ST, 0)    AS b1st,
-			    ISNULL(B2ND, 0)    AS b2st,
-			    ISNULL(B3RD, 0)    AS b3st,
-			    ISNULL(B4TH, 0)    AS b4st,
-			    ISNULL(B5TH, 0)    AS b5st,
-			    ISNULL(P_GM, 0)    AS pgin,   
-			    ISNULL(A1ST, 0)    AS a1st,
-			    ISNULL(A2ND, 0)    AS a2st,
-			    ISNULL(A3RD, 0)    AS a3st,
-			    ISNULL(A4TH, 0)    AS a4st,
-			    ISNULL(A5TH, 0)    AS a5st,
-			    ISNULL(F_ABOUT, 0) AS fabOut  
-			FROM TB_KPI_TARGET
-			WHERE KPI_YEAR = #{year}
-			ORDER BY CASE WAVE_CD 
+			SELECT
+			     #{year} AS year,
+			    W.WAVE_CD AS waveCd, 
+			    W.WAVE_NM AS waveNm,
+			    ISNULL(T.FAB_IN, 0)   AS fabIn,  
+			    ISNULL(T.B1ST, 0)    AS b1st,
+			    ISNULL(T.B2ST, 0)    AS b2st,
+			    ISNULL(T.B3ST, 0)    AS b3st,
+			    ISNULL(T.B4ST, 0)    AS b4st,
+			    ISNULL(T.B5ST, 0)    AS b5st,
+			    ISNULL(T.PG_IN, 0)    AS pgin,   
+			    ISNULL(T.A1ST, 0)    AS a1st,
+			    ISNULL(T.A2ST, 0)    AS a2st,
+			    ISNULL(T.A3ST, 0)    AS a3st,
+			    ISNULL(T.A4ST, 0)    AS a4st,
+			    ISNULL(T.A5ST, 0)    AS a5st,
+			    ISNULL(T.FAB_OUT, 0) AS fabOut  
+			FROM TB_WAVE_INFO W  
+			LEFT JOIN TB_KPI_TARGET T 
+			    ON W.WAVE_CD = T.WAVE_CD 
+			   AND T.KPI_YEAR = #{year}
+			ORDER BY CASE W.WAVE_CD 
 			    WHEN 'EUV' THEN 1 
 			    WHEN 'Arf_I' THEN 2 
 			    WHEN 'Arf_F' THEN 3 
@@ -108,9 +119,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			    WHEN 'OUV' THEN 5 
 			    WHEN 'SUV' THEN 6 
 			    WHEN 'RUV' THEN 7 
-			END;    
--->
+			END;
 
+
+
+    </select>        
+    
     <select id="getKpiInfoList"
 		parameterType="com.cedev.api.basemng.dto.KpiSearchDto" 
     	resultType="com.cedev.api.basemng.dto.KpiInfoDto">
@@ -201,8 +215,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             );
     </update>
     
-
-
     <!-- [2단계] 이력 기록용 마스터 정보 등록 -->
     <insert id="insertKpiHistMaster" parameterType="map">
         INSERT INTO TB_KPI_TARGET_HIST (

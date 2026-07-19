@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cedev.api.basemng.dto.KpiInfoDto;
 import com.cedev.api.basemng.dto.KpiSearchDto;
+import com.cedev.api.basemng.dto.LotInfoDto;
+import com.cedev.api.basemng.dto.LotSearchDto;
 import com.cedev.api.basemng.dto.PuInfoDto;
 import com.cedev.api.basemng.dto.PuSearchDto;
 import com.cedev.api.basemng.dto.SectInfoDto;
@@ -73,6 +75,15 @@ public class KpiInfoController {
 
         return kpiInfoService.getSectInfoList(searchDto);
     }      
+    
+    //-------------------------------------------------------------------------------------------
+    // Section
+    //-------------------------------------------------------------------------------------------
+    @GetMapping("/api/basemng-lot-info")
+    public List<LotInfoDto> getLotInfoList(LotSearchDto searchDto) {
+
+        return kpiInfoService.getLotInfoList(searchDto);
+    }          
 
 
     //-------------------------------------------------------------------------------------------

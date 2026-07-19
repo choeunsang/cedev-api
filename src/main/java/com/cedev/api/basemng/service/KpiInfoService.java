@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cedev.api.basemng.dto.KpiInfoDto;
 import com.cedev.api.basemng.dto.KpiSearchDto;
+import com.cedev.api.basemng.dto.LotInfoDto;
+import com.cedev.api.basemng.dto.LotSearchDto;
 import com.cedev.api.basemng.dto.PuInfoDto;
 import com.cedev.api.basemng.dto.PuSearchDto;
 import com.cedev.api.basemng.dto.SectInfoDto;
@@ -67,6 +69,14 @@ public class KpiInfoService {
 
         return kpiInfoMapper.getSectInfoList(searchDto);
     }        
+    
+    //-------------------------------------------------------------------------------------------
+    // Lot
+    //-------------------------------------------------------------------------------------------
+    public List<LotInfoDto> getLotInfoList(LotSearchDto searchDto) {
+
+        return kpiInfoMapper.getLotInfoList(searchDto);
+    }      
 
     //-------------------------------------------------------------------------------------------
     // target
