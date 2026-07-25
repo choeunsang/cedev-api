@@ -49,6 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		parameterType="com.cedev.api.basemng.dto.LotSearchDto" 
     	resultType="com.cedev.api.basemng.dto.LotInfoDto">
     	
+WITH LIST AS (		    	
 		SELECT A.LOT_ID as lotId
 		     , A.STD_DT as stdDt
 		     , A.OPER as oper
@@ -79,7 +80,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		    ON A.LOT_ID = B.LOT_ID 
 		    AND B.OPER <![CDATA[ <= ]]>  A.OPER   
 		GROUP BY A.LOT_ID, A.STD_DT, A.OPER, A.LOT_CREATE_TM, A.LOT_OUT_TM
-		ORDER BY A.LOT_ID
+)								
+SELECT B.lotId
+      ,B.stdDt
+      ,B.oper      
+      ,A.site   
+      ,C.NM AS siteNm            
+      ,A.tech            
+      ,D.NM AS techNm      
+      ,A.equip
+      ,E.NM AS equipNm            
+      ,B.tPgIn
+      ,B.tNoGwang
+      ,B.t1stA
+      ,B.t1stA2
+      ,B.t1stB
+      ,B.t1stB2
+      ,B.t2nd
+      ,B.tAdd
+      ,B.[end]      
+      ,B.vPgIn
+      ,B.vNoGwang
+      ,B.v1stA
+      ,B.v1stA2
+      ,B.v1stB
+      ,B.v1stB2
+      ,B.v2nd
+      ,B.vAdd      
+      ,B.lotCreateTm
+      ,B.lotOutTm      
+ FROM LIST B
+  INNER JOIN TB_LOT A ON A.LOT_ID  = B.LOTID
+  LEFT OUTER JOIN TB_SITE_INFO C ON A.SITE = C.CD
+  LEFT OUTER JOIN TB_TECH_INF D ON A.TECH = D.CD
+  LEFT OUTER JOIN TB_EQUIP_INF E ON A.EQUIP = E.CD
+ORDER BY B.lotId  
 
     </select>       
     

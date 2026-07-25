@@ -14,6 +14,13 @@ public class LotInfoDto {
     private String lotId;
     private String stdDt;
     private String oper;
+    
+    private String site;
+    private String siteNm;
+    private String tech;
+    private String techNm;
+    private String equip;
+    private String equipNm;
 
     // 공정별 시각 (T_...)
     private String tPgIn;
