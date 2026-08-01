@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 public class LotInfoDto {
     
-    // 이미지 내 SQL 컬럼 기반 추가 필드
+    // 이미지 내 SQL 컬럼 기반 추가 필드ss
     private String lotId;
     private String stdDt;
     private String oper;
