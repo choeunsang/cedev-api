@@ -14,6 +14,7 @@ import com.cedev.api.basemng.dto.KpiSearchDto;
 import com.cedev.api.basemng.dto.LotInfoDto;
 import com.cedev.api.basemng.dto.LotSearchDto;
 import com.cedev.api.basemng.dto.PuInfoDto;
+import com.cedev.api.basemng.dto.PuSaveDto;
 import com.cedev.api.basemng.dto.PuSearchDto;
 import com.cedev.api.basemng.dto.SectInfoDto;
 import com.cedev.api.basemng.dto.SectSearchDto;
@@ -21,6 +22,7 @@ import com.cedev.api.basemng.dto.TargetInfoDto;
 import com.cedev.api.basemng.dto.TargetSaveDto;
 import com.cedev.api.basemng.dto.TargetSearchDto;
 import com.cedev.api.basemng.dto.WaveInfoDto;
+import com.cedev.api.basemng.dto.WaveSaveDto;
 import com.cedev.api.basemng.dto.WaveSearchDto;
 import com.cedev.api.basemng.service.KpiInfoService;
 import com.cedev.api.realestate.dto.EntireMonthlyTradeVolumeDto;
@@ -40,9 +42,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RestController
 public class KpiInfoController {
 
+	
     //-------------------------------------------------------------------------------------------
     // Declare and initialize variables
-    //-------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------	
     private final KpiInfoService kpiInfoService;
 
     public KpiInfoController(KpiInfoService kpiInfoService) {
@@ -56,7 +59,30 @@ public class KpiInfoController {
     public List<WaveInfoDto> getWaveInfoList(WaveSearchDto searchDto) {
 
         return kpiInfoService.getWaveInfoList(searchDto);
-    }    
+    }
+    
+    @PostMapping("/api/basemng-wave-info/save")
+    public Map<String, Object> saveWaveInfo(@RequestBody WaveSaveDto saveDto) {
+
+        Map<String, Object> result = new HashMap<>();
+        
+        try {
+            // 💡 서비스 단 비즈니스 로직 호출 및 생성된 14자리 이력 번호(BIGINT) 리턴
+            Long generatedHistId = kpiInfoService.saveWaveInfo(saveDto);
+            
+            result.put("status", "SUCCESS");
+            result.put("message", "성공");
+            //result.put("histId", generatedHistId); // 생성된 실시간 이력 아이디 전달
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("status", "FAIL");
+            result.put("message", "저장 실패: " + e.getMessage());
+            //result.put("histId", null);
+        }
+        
+        return result;    	
+    }       
     
     //-------------------------------------------------------------------------------------------
     // pu
@@ -67,6 +93,29 @@ public class KpiInfoController {
         return kpiInfoService.getPuInfoList(searchDto);
     }        
     
+    @PostMapping("/api/basemng-pu-info/save")
+    public Map<String, Object> savePuInfo(@RequestBody PuSaveDto saveDto) {
+
+        Map<String, Object> result = new HashMap<>();
+        
+        try {
+            // 💡 서비스 단 비즈니스 로직 호출 및 생성된 14자리 이력 번호(BIGINT) 리턴
+            Long generatedHistId = kpiInfoService.savePuInfo(saveDto);
+            
+            result.put("status", "SUCCESS");
+            result.put("message", "성공");
+            //result.put("histId", generatedHistId); // 생성된 실시간 이력 아이디 전달
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("status", "FAIL");
+            result.put("message", "저장 실패: " + e.getMessage());
+            //result.put("histId", null);
+        }
+        
+        return result;    	
+    }       
+    
     //-------------------------------------------------------------------------------------------
     // Section
     //-------------------------------------------------------------------------------------------
@@ -76,8 +125,10 @@ public class KpiInfoController {
         return kpiInfoService.getSectInfoList(searchDto);
     }      
     
+     
+    
     //-------------------------------------------------------------------------------------------
-    // Section
+    // Lot
     //-------------------------------------------------------------------------------------------
     @GetMapping("/api/basemng-lot-info")
     public List<LotInfoDto> getLotInfoList(LotSearchDto searchDto) {

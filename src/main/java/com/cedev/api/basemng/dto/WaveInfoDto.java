@@ -12,5 +12,6 @@ public class WaveInfoDto {
     //
     private String waveCd;        
     private String waveNm;        
+    private String tatStart;        
 
 }

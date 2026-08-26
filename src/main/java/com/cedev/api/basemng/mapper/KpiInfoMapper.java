@@ -30,21 +30,47 @@ import com.cedev.api.realestate.dto.SigunguMonthlyTradeVolumeDto;
 @Mapper
 public interface KpiInfoMapper {
 	
+    //-------------------------------------------------------------------------------------------
+    // wave
+    //-------------------------------------------------------------------------------------------	
 	List<WaveInfoDto> getWaveInfoList(WaveSearchDto searchDto);
 	
+	int saveWaveInfo(Map<String, Object> param);
+	
+    //-------------------------------------------------------------------------------------------
+    // pu
+    //-------------------------------------------------------------------------------------------	
 	List<PuInfoDto> getPuInfoList(PuSearchDto searchDto);
 	
+	int savePuInfo(Map<String, Object> param);
+	
+    //-------------------------------------------------------------------------------------------
+    // Sect
+    //-------------------------------------------------------------------------------------------	
 	List<SectInfoDto> getSectInfoList(SectSearchDto searchDto);
 	
-	List<LotInfoDto> getLotInfoList(LotSearchDto searchDto);
 	
+    //-------------------------------------------------------------------------------------------
+    // Lot
+    //-------------------------------------------------------------------------------------------	
+	List<LotInfoDto> getLotInfoList(LotSearchDto searchDto);
+
+	
+    //-------------------------------------------------------------------------------------------
+    // Target
+    //-------------------------------------------------------------------------------------------	
 	List<TargetInfoDto> getTargetInfoList(TargetSearchDto searchDto);
 	
+	
+    //-------------------------------------------------------------------------------------------
+    // Kpi
+    //-------------------------------------------------------------------------------------------	
 	List<KpiInfoDto> getKpiInfoList(KpiSearchDto searchDto);
 
     int upsertKpiTarget(Map<String, Object> param);
+        
+    int insertKpiHistMaster(Map<String, Object> param);
     
-    //int insertKpiHistMaster(Map<String, Object> param);
-    //int insertKpiHistDetailSnapshot(Map<String, Object> param);	
+    int insertKpiHistDetail(Map<String, Object> param);	
 
 }

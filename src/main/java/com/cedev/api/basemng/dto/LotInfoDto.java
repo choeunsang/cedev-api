@@ -13,6 +13,8 @@ public class LotInfoDto {
     // 이미지 내 SQL 컬럼 기반 추가 필드ss
     private String lotId;
     private String stdDt;
+    private String lotInfo;
+    private String wave;    
     private String oper;
     
     private String site;

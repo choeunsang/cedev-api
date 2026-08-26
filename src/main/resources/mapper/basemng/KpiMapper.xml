@@ -5,45 +5,66 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="com.cedev.api.basemng.mapper.KpiInfoMapper">
 
-	<!-- 기준정보  ============================================================================================== -->
-    
-    <select id="getWaveInfoList"
-		parameterType="com.cedev.api.basemng.dto.WaveSearchDto" 
-    	resultType="com.cedev.api.basemng.dto.WaveInfoDto">
-        SELECT
-            wave_cd as waveCd,
-            wave_nm as waveNm
-
-        FROM TB_WAVE_INFO
-        WHERE 1 = 1
-
-    </select>
-    
-    <select id="getPuInfoList"
-		parameterType="com.cedev.api.basemng.dto.PuSearchDto" 
-    	resultType="com.cedev.api.basemng.dto.PuInfoDto">
-        SELECT
-            pu_cd as puCd,
-            pu_nm as puNm
-
-        FROM TB_PU_INFO
-        WHERE 1 = 1
-
-    </select>
+	<!-- Section  ============================================================================================== -->
     
 	<select id="getSectInfoList"
 		parameterType="com.cedev.api.basemng.dto.SectSearchDto" 
     	resultType="com.cedev.api.basemng.dto.SectInfoDto">
-        SELECT
-             cd,
-             nm
+		SELECT A.CD as cd
+		     , A.NM as nm
+		     , STRING_AGG(B.NM, ', ') WITHIN GROUP (ORDER BY A.CD) AS nms 
+		FROM TB_SECT_INF A
+		--INNER JOIN TB_PU_INFO B ON B.PARENT_CD = A.CD
+		left outer JOIN TB_PU_INFO B ON B.PARENT_CD = A.CD
+		GROUP BY A.CD, A.NM
+		order by cd asc
 
-        FROM TB_SECT_INF
+    </select> 
+    
+    <!-- Pu  ============================================================================================== -->
+    
+    <select id="getPuInfoList"
+		parameterType="com.cedev.api.basemng.dto.PuSearchDto" 
+    	resultType="com.cedev.api.basemng.dto.PuInfoDto">
+		SELECT A.cd as puCd
+		     , A.nm as puNm
+		     , A.parent_cd as parentCd
+		     , B.NM as parentNm
+		FROM TB_PU_INFO A
+		inner join TB_SECT_INF B on B.CD = A.CD
+		WHERE 1 = 1
+
+    </select>
+    
+    <update id="savePuInfo" parameterType="map">
+            UPDATE TB_PU_INFO SET 
+                   PARENT_CD   = #{row.parentCd} 
+            WHERE 1=1
+              AND CD = #{row.puCd}  
+    </update>    
+    
+	<!-- Wave  ============================================================================================== -->    
+       
+    <select id="getWaveInfoList"
+		parameterType="com.cedev.api.basemng.dto.WaveSearchDto" 
+    	resultType="com.cedev.api.basemng.dto.WaveInfoDto">
+        SELECT cd as waveCd
+             , nm as waveNm
+             , tat_start as tatStart
+
+        FROM TB_WAVE_INFO
         WHERE 1 = 1
 
     </select>    
     
-    <!-- 대쉬보드 ============================================================================================== -->
+    <update id="saveWaveInfo" parameterType="map">
+            UPDATE TB_WAVE_INFO SET 
+                   TAT_START   = #{row.tatStart} 
+            WHERE 1=1
+              AND CD = #{row.waveCd}  
+    </update>     
+    
+    <!-- Lot ============================================================================================== -->
     
 	<select id="getLotInfoList"
 		parameterType="com.cedev.api.basemng.dto.LotSearchDto" 
@@ -81,8 +102,10 @@ WITH LIST AS (
 		    AND B.OPER <![CDATA[ <= ]]>  A.OPER   
 		GROUP BY A.LOT_ID, A.STD_DT, A.OPER, A.LOT_CREATE_TM, A.LOT_OUT_TM
 )								
-SELECT B.lotId
+SELECT B.lotId      
       ,B.stdDt
+      ,A.LOT_INFO as lotInfo
+      ,a.wave
       ,B.oper      
       ,A.site   
       ,C.NM AS siteNm            
@@ -118,7 +141,7 @@ ORDER BY B.lotId
 
     </select>       
     
-    <!-- 목표관리 ============================================================================================== -->
+    <!-- Target ============================================================================================== -->
     
     <select id="getTargetInfoList"
 		parameterType="com.cedev.api.basemng.dto.TargetSearchDto" 
@@ -127,8 +150,8 @@ ORDER BY B.lotId
     	
 			SELECT
 			     #{year} AS year,
-			    W.WAVE_CD AS waveCd, 
-			    W.WAVE_NM AS waveNm,
+			    W.CD AS waveCd, 
+			    W.NM AS waveNm,
 			    ISNULL(T.FAB_IN, 0)   AS fabIn,  
 			    ISNULL(T.B1ST, 0)    AS b1st,
 			    ISNULL(T.B2ST, 0)    AS b2st,
@@ -144,9 +167,9 @@ ORDER BY B.lotId
 			    ISNULL(T.FAB_OUT, 0) AS fabOut  
 			FROM TB_WAVE_INFO W  
 			LEFT JOIN TB_KPI_TARGET T 
-			    ON W.WAVE_CD = T.WAVE_CD 
+			    ON W.CD = T.WAVE_CD 
 			   AND T.KPI_YEAR = #{year}
-			ORDER BY CASE W.WAVE_CD 
+			ORDER BY CASE W.CD 
 			    WHEN 'EUV' THEN 1 
 			    WHEN 'Arf_I' THEN 2 
 			    WHEN 'Arf_F' THEN 3 
@@ -159,6 +182,8 @@ ORDER BY B.lotId
 
 
     </select>        
+    
+	<!-- Kpi  ============================================================================================== -->        
     
     <select id="getKpiInfoList"
 		parameterType="com.cedev.api.basemng.dto.KpiSearchDto" 
@@ -252,27 +277,70 @@ ORDER BY B.lotId
     
     <!-- [2단계] 이력 기록용 마스터 정보 등록 -->
     <insert id="insertKpiHistMaster" parameterType="map">
-        INSERT INTO TB_KPI_TARGET_HIST (
-            HIST_ID, KPI_YEAR, REASON, REG_ID, REG_DT
+        INSERT INTO TB_KPI_TARGET_HIST_MASTER (
+		        HIST_ID
+		      , KPI_YEAR
+		      , CHG_REASON
+		      , MOD_USER 
+		      , HIST_REG_DT 
         )
         VALUES (
-            #{histId}, #{year}, #{reason}, #{userId}, GETDATE()
+             #{histId}
+           , #{year}
+           , #{reason}           
+           , #{userId}
+           , GETDATE() 
         )
     </insert>
 
     <!-- [3단계] 이력 상세 정보 일괄 고속 스냅샷 복사 (SELECT INSERT 구조) -->
-    <insert id="insertKpiHistDetailSnapshot" parameterType="map">
-        INSERT INTO TB_KPI_TARGET_HIST_DETAIL (
-            HIST_ID, WAVE_CD, 
-            P_BIN, B1ST, B2ND, B3RD, B4TH, B5TH, 
-            P_GM, A1ST, A2ND, A3RD, A4TH, A5TH, F_ABOUT
-        )
-        SELECT 
-            #{histId}, T.WAVE_CD,
-            T.P_BIN, T.B1ST, T.B2ND, T.B3RD, T.B4TH, T.B5TH,
-            T.P_GM, T.A1ST, T.A2ND, T.A3RD, T.A4TH, T.A5TH, T.F_ABOUT
-        FROM TB_KPI_TARGET T
-        WHERE T.KPI_YEAR = #{year}
+    <insert id="insertKpiHistDetail" parameterType="map">
+
+            INSERT INTO TB_KPI_TARGET_HIST_DETAIL (
+				  HIST_ID				
+				, WAVE_CD
+				
+				, FAB_IN
+				, B1ST
+				, B2ST
+				, B3ST
+				, B4ST
+				, B5ST
+				
+				, PG_IN
+				, A1ST
+				, A2ST
+				, A3ST
+				, A4ST
+				, A5ST
+				
+				, FAB_OUT
+				, REG_DT
+				, REG_USER
+            )
+            VALUES (
+				
+				#{histId} 				                
+                ,#{row.waveCd} 	               
+                                                                 
+                ,TRY_CAST(ISNULL(#{row.fabIn}, '0') AS NUMERIC(18,2)) 
+                ,TRY_CAST(ISNULL(#{row.b1st}, '0') AS NUMERIC(18,2)) 
+                ,TRY_CAST(ISNULL(#{row.b2st}, '0') AS NUMERIC(18,2)) 
+                ,TRY_CAST(ISNULL(#{row.b3st}, '0') AS NUMERIC(18,2)) 
+                ,TRY_CAST(ISNULL(#{row.b4st}, '0') AS NUMERIC(18,2)) 
+                ,TRY_CAST(ISNULL(#{row.b5st}, '0') AS NUMERIC(18,2)) 
+                
+                ,TRY_CAST(ISNULL(#{row.pgin}, '0') AS NUMERIC(18,2)) 
+                ,TRY_CAST(ISNULL(#{row.a1st}, '0') AS NUMERIC(18,2)) 
+                ,TRY_CAST(ISNULL(#{row.a2st}, '0') AS NUMERIC(18,2)) 
+                ,TRY_CAST(ISNULL(#{row.a3st}, '0') AS NUMERIC(18,2)) 
+                ,TRY_CAST(ISNULL(#{row.a4st}, '0') AS NUMERIC(18,2)) 
+                ,TRY_CAST(ISNULL(#{row.a5st}, '0') AS NUMERIC(18,2)) 
+                
+                ,TRY_CAST(ISNULL(#{row.fabOut}, '0') AS NUMERIC(18,2)) 
+                ,GETDATE() 
+                ,#{userId}
+            );        
     </insert>    
 
 

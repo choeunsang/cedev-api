@@ -12,6 +12,7 @@ public class SectInfoDto {
     
     private String cd;        
     private String nm;
+    private String nms;
     private String tatStartPos;
 
 }
