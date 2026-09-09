@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cedev.api.coin.mapper.CoinInfoMapper">
+
+	   
+	<select id="getCoinInfoList"
+		parameterType="com.cedev.api.coin.dto.CoinSearchDto" 
+    	resultType="com.cedev.api.coin.dto.CoinInfoDto">    	
+				
+		SELECT  A.CD as cd
+		      , A.KR_NM as krNm
+		      , A.EN_NM as enNm
+		      , A.DESCRIPTION as description
+		      , A.ISSUE_CNTRY_NM as issueCntryNm
+		      , B.PRICE as price
+		      , B.PRICE_DT as priceDt
+		      , B.MARKET_CAP as marketCap
+		      , A.USE_YN as useYn
+		FROM TB_COIN_INFO A
+		INNER JOIN TB_COIN_DETAIL B ON B.CD = A.CD 
+		WHERE 1=1		
+		  AND B.PRICE_DT = (
+			                 SELECT MAX(SUB.PRICE_DT)
+			                   FROM TB_COIN_DETAIL SUB
+			                  WHERE SUB.CD = A.CD
+		  					)
+		  
+
+    </select>
+    
+     	<select id="getCoinDetailList"
+		parameterType="com.cedev.api.coin.dto.CoinSearchDto" 
+    	resultType="com.cedev.api.coin.dto.CoinDetailDto">    	
+				
+		SELECT  A.CD as cd
+		      , A.PRICE as price
+		      , A.PRICE_DT as priceDt		      
+		      , A.MARKET_CAP as marketCap
+		      , A.ETC as etc
+		      
+		FROM TB_COIN_DETAIL A		
+		WHERE 1=1		
+		  AND A.CD = #{cd}
+   	  ORDER BY cd asc
+              , price_dt DESC		  
+
+    </select>
+ 
+</mapper>
