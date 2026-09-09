@@ -10,6 +10,8 @@ import lombok.ToString;
 @ToString
 public class TargetSearchDto {
 	
+	
+	private String histId;   
 	private String year;   
 	
     private String puCd;        

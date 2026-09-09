@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cedev.api.basemng.dto.KpiInfoDto;
+import com.cedev.api.basemng.dto.KpiSaveDto;
 import com.cedev.api.basemng.dto.KpiSearchDto;
 import com.cedev.api.basemng.dto.LotInfoDto;
 import com.cedev.api.basemng.dto.LotSearchDto;
@@ -18,7 +19,9 @@ import com.cedev.api.basemng.dto.PuSaveDto;
 import com.cedev.api.basemng.dto.PuSearchDto;
 import com.cedev.api.basemng.dto.SectInfoDto;
 import com.cedev.api.basemng.dto.SectSearchDto;
+import com.cedev.api.basemng.dto.TargetDetailDto;
 import com.cedev.api.basemng.dto.TargetInfoDto;
+import com.cedev.api.basemng.dto.TargetMasterDto;
 import com.cedev.api.basemng.dto.TargetSaveDto;
 import com.cedev.api.basemng.dto.TargetSearchDto;
 import com.cedev.api.basemng.dto.WaveInfoDto;
@@ -146,6 +149,18 @@ public class KpiInfoController {
         return kpiInfoService.getTargetInfoList(searchDto);
     }        
     
+    @GetMapping("/api/basemng-target-his-master")
+    public List<TargetMasterDto> getTargetMaster(TargetSearchDto searchDto) {
+
+        return kpiInfoService.getTargetHisMaster(searchDto);
+    }          
+    
+    @GetMapping("/api/basemng-target-his-detail")
+    public List<TargetDetailDto> getTargetDetail(TargetSearchDto searchDto) {
+
+        return kpiInfoService.getTargetHisDetail(searchDto);
+    }              
+    
     //-------------------------------------------------------------------------------------------
     // kpi
     //-------------------------------------------------------------------------------------------
@@ -155,12 +170,35 @@ public class KpiInfoController {
         return kpiInfoService.getKpiInfoList(searchDto);
     }            
     
+    @PostMapping("/api/basemng-kpi-info/save")
+    public Map<String, Object> saveKpiInfo(@RequestBody KpiSaveDto saveDto) {
+
+        Map<String, Object> result = new HashMap<>();
+        
+        try {
+            // 💡 서비스 단 비즈니스 로직 호출 및 생성된 14자리 이력 번호(BIGINT) 리턴
+            Long generatedHistId = kpiInfoService.saveKpiInfo(saveDto);
+            
+            result.put("status", "SUCCESS");
+            result.put("message", "성공");
+            result.put("histId", generatedHistId); // 생성된 실시간 이력 아이디 전달
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("status", "FAIL");
+            result.put("message", "저장 실패: " + e.getMessage());
+            result.put("histId", null);
+        }
+        
+        return result;    	
+    }        
+    
     
     //-------------------------------------------------------------------------------------------
-    // target - 저장
+    // Target(목표)
     //-------------------------------------------------------------------------------------------    
     @PostMapping("/api/basemng-target-info/save")
-    public Map<String, Object> saveKpiInfo(@RequestBody TargetSaveDto saveDto) {
+    public Map<String, Object> saveTargetInfo(@RequestBody TargetSaveDto saveDto) {
 
         Map<String, Object> result = new HashMap<>();
         
@@ -179,8 +217,6 @@ public class KpiInfoController {
             result.put("histId", null);
         }
         
-        return result;
-    	
-    }    
-    
+        return result;    	
+    }        
 }

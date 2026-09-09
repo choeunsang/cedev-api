@@ -13,7 +13,9 @@ import com.cedev.api.basemng.dto.PuInfoDto;
 import com.cedev.api.basemng.dto.PuSearchDto;
 import com.cedev.api.basemng.dto.SectInfoDto;
 import com.cedev.api.basemng.dto.SectSearchDto;
+import com.cedev.api.basemng.dto.TargetDetailDto;
 import com.cedev.api.basemng.dto.TargetInfoDto;
+import com.cedev.api.basemng.dto.TargetMasterDto;
 import com.cedev.api.basemng.dto.TargetSearchDto;
 import com.cedev.api.basemng.dto.WaveInfoDto;
 import com.cedev.api.basemng.dto.WaveSearchDto;
@@ -55,22 +57,29 @@ public interface KpiInfoMapper {
     //-------------------------------------------------------------------------------------------	
 	List<LotInfoDto> getLotInfoList(LotSearchDto searchDto);
 
+    //-------------------------------------------------------------------------------------------
+    // Kpi
+    //-------------------------------------------------------------------------------------------	
+	List<KpiInfoDto> getKpiInfoList(KpiSearchDto searchDto);
+
+    int upsertKpi(Map<String, Object> param);	
 	
     //-------------------------------------------------------------------------------------------
     // Target
     //-------------------------------------------------------------------------------------------	
 	List<TargetInfoDto> getTargetInfoList(TargetSearchDto searchDto);
 	
+	List<TargetMasterDto> getTargetHisMaster(TargetSearchDto searchDto);
+		
+	List<TargetDetailDto> getTargetHisDetail(TargetSearchDto searchDto);
 	
-    //-------------------------------------------------------------------------------------------
-    // Kpi
-    //-------------------------------------------------------------------------------------------	
-	List<KpiInfoDto> getKpiInfoList(KpiSearchDto searchDto);
-
-    int upsertKpiTarget(Map<String, Object> param);
-        
-    int insertKpiHistMaster(Map<String, Object> param);
+	
+    int upsertTarget(Map<String, Object> param);
     
-    int insertKpiHistDetail(Map<String, Object> param);	
+    int insertHistMaster(Map<String, Object> param);
+    
+    int insertHistDetail(Map<String, Object> param);		
+	
+
 
 }

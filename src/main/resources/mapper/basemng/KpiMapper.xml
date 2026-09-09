@@ -143,11 +143,8 @@ ORDER BY B.lotId
     
     <!-- Target ============================================================================================== -->
     
-    <select id="getTargetInfoList"
-		parameterType="com.cedev.api.basemng.dto.TargetSearchDto" 
-    	resultType="com.cedev.api.basemng.dto.TargetInfoDto">
-    	
-    	
+    <select id="getTargetInfoList" parameterType="com.cedev.api.basemng.dto.TargetSearchDto" 
+                                   resultType="com.cedev.api.basemng.dto.TargetInfoDto">    	    
 			SELECT
 			     #{year} AS year,
 			    W.CD AS waveCd, 
@@ -177,51 +174,45 @@ ORDER BY B.lotId
 			    WHEN 'OUV' THEN 5 
 			    WHEN 'SUV' THEN 6 
 			    WHEN 'RUV' THEN 7 
-			END;
-
-
-
+			END
     </select>        
     
-	<!-- Kpi  ============================================================================================== -->        
+    <select id="getTargetHisMaster" parameterType="com.cedev.api.basemng.dto.TargetSearchDto" 
+                                   resultType="com.cedev.api.basemng.dto.TargetMasterDto">    	    
+			SELECT HIST_ID AS histId
+			     , KPI_YEAR AS kpiYear
+			     , CHG_REASON AS chgReason
+			     , HIST_REG_DT AS histRegDt
+			     , MOD_USER AS modUser
+			FROM TB_KPI_TARGET_HIST_MASTER
+    </select>          
     
-    <select id="getKpiInfoList"
-		parameterType="com.cedev.api.basemng.dto.KpiSearchDto" 
-    	resultType="com.cedev.api.basemng.dto.KpiInfoDto">
-    	
-	    SELECT [YEAR]       AS year
-	         , KPI_CD       AS kpiCd
-	         , KPI_NM       AS kpiNm
-	         , GUBUN        AS gubun
-	         , KPI_VAL      AS kpiVal
-	         , [1st_Sign]   AS v1stSign
-	         , [1st_Val]    AS v1stVal
-	         , [1st_Mon]    AS v1stMon
-	         , [1st_UseYn]  AS v1stUseYn
-	         , [2nd_Sign]   AS v2ndSign
-	         , [2nd_Val]    AS v2ndVal
-	         , [2nd_Mon]    AS v2ndMon
-	         , [2nd_UseYn]  AS v2ndUseYn
-	         , [3rd_Sign]   AS v3rdSign
-	         , [3rd_Val]    AS v3rdVal
-	         , [3rd_Mon]    AS v3rdMon
-	         , [3rd_UseYn]  AS v3rdUseYn
-	         , [4th_Sign]   AS v4thSign
-	         , [4th_Val]    AS v4thVal
-	         , [4th_Mon]    AS v4thMon
-	         , [4th_UseYn]  AS v4thUseYn
-	         , REG_ID       AS regId
-	         , REG_DT       AS regDt
-	         , MOD_ID       AS modId
-	         , MOD_DT       AS modDt
-	      FROM tb_kpi_m
-	     WHERE 1=1
-          order by kpicd asc
-
-    </select>  
+    <select id="getTargetHisDetail" parameterType="com.cedev.api.basemng.dto.TargetSearchDto" 
+                                   resultType="com.cedev.api.basemng.dto.TargetDetailDto">    	    
+			SELECT HIST_ID AS histId
+				 , WAVE_CD AS waveCd
+				 , FAB_IN AS fabIn
+				 , B1ST AS b1st
+				 , B2ST AS b2st
+				 , B3ST AS b3st
+				 , B4ST AS b4st
+				 , B5ST AS b5st
+				 , PG_IN AS pgin
+				 , A1ST AS a1st
+				 , A2ST AS a2st
+				 , A3ST AS a3st
+				 , A4ST AS a4st
+				 , A5ST AS a5st
+				 , FAB_OUT AS fabOut
+				 , REG_DT AS regDt
+				 , REG_USER AS regUser
+			FROM TB_KPI_TARGET_HIST_DETAIL
+		   WHERE 1=1
+	        AND HIST_ID = #{histId}
+    </select>         
     
     <!-- [1단계] 메인 마스터 타겟 정보 MERGE 처리 (수정된 ST 스키마 버전) -->
-    <update id="upsertKpiTarget" parameterType="map">
+    <update id="upsertTarget" parameterType="map">
         MERGE INTO TB_KPI_TARGET AS Target
         USING (SELECT #{year} AS KPI_YEAR, #{row.waveCd} AS WAVE_CD) AS Source
         ON (Target.KPI_YEAR = Source.KPI_YEAR AND Target.WAVE_CD = Source.WAVE_CD)
@@ -276,7 +267,7 @@ ORDER BY B.lotId
     </update>
     
     <!-- [2단계] 이력 기록용 마스터 정보 등록 -->
-    <insert id="insertKpiHistMaster" parameterType="map">
+    <insert id="insertHistMaster" parameterType="map">
         INSERT INTO TB_KPI_TARGET_HIST_MASTER (
 		        HIST_ID
 		      , KPI_YEAR
@@ -294,7 +285,7 @@ ORDER BY B.lotId
     </insert>
 
     <!-- [3단계] 이력 상세 정보 일괄 고속 스냅샷 복사 (SELECT INSERT 구조) -->
-    <insert id="insertKpiHistDetail" parameterType="map">
+    <insert id="insertHistDetail" parameterType="map">
 
             INSERT INTO TB_KPI_TARGET_HIST_DETAIL (
 				  HIST_ID				
@@ -344,5 +335,142 @@ ORDER BY B.lotId
             );        
     </insert>    
 
+    
+    
+	<!-- Kpi  ============================================================================================== -->        
+    
+    <select id="getKpiInfoList"
+		parameterType="com.cedev.api.basemng.dto.KpiSearchDto" 
+    	resultType="com.cedev.api.basemng.dto.KpiInfoDto">
+    	
+	    SELECT [YEAR]       AS year
+	         , KPI_CD       AS kpiCd
+	         , KPI_NM       AS kpiNm
+	         , GUBUN_VAL    AS gubunVal
+	         , GUBUN_SIGN   AS gubunSign
+	         , KPI_VAL      AS kpiVal
+	         , [1st_Sign]   AS v1stSign
+	         , [1st_Val]    AS v1stVal
+	         , [1st_Mon]    AS v1stMon
+	         , [1st_UseYn]  AS v1stUseYn
+	         , [2st_Sign]   AS v2stSign
+	         , [2st_Val]    AS v2stVal
+	         , [2st_Mon]    AS v2stMon
+	         , [2st_UseYn]  AS v2stUseYn
+	         , [3st_Sign]   AS v3stSign
+	         , [3st_Val]    AS v3stVal
+	         , [3st_Mon]    AS v3stMon
+	         , [3st_UseYn]  AS v3stUseYn
+	         , [4st_Sign]   AS v4stSign
+	         , [4st_Val]    AS v4stVal
+	         , [4st_Mon]    AS v4stMon
+	         , [4st_UseYn]  AS v4stUseYn
+	         , REG_ID       AS regId
+	         , REG_DT       AS regDt
+	         , MOD_ID       AS modId
+	         , MOD_DT       AS modDt
+	      FROM tb_kpi_m
+	     WHERE 1=1
+          order by kpicd asc
+
+    </select>  
+        
+    <update id="upsertKpi" parameterType="map">
+        MERGE INTO TB_KPI_M AS Target
+        USING (SELECT #{year} AS YEAR, #{row.kpiCd} AS KPI_CD) AS Source
+        ON (Target.YEAR = Source.YEAR AND Target.KPI_CD = Source.KPI_CD)        
+        
+        WHEN MATCHED THEN
+            UPDATE SET 
+		        KPI_NM = #{row.kpiNm}
+		      , GUBUN_VAL = #{row.gubunVal}
+		      , GUBUN_SIGN = #{row.gubunSign}
+		      , KPI_VAL = #{row.kpiVal}
+		      
+		      , [1st_Sign] = #{row.v1stSign}
+		      , [1st_Val] = #{row.v1stVal}
+		      , [1st_Mon] = #{row.v1stMon}
+		      , [1st_UseYn] = #{row.v1stUseYn}
+		      , [2st_Sign] = #{row.v2stSign}
+		      
+		      , [2st_Val] = #{row.v2stVal}
+		      , [2st_Mon] = #{row.v2stMon}
+		      , [2st_UseYn] = #{row.v2stUseYn}
+		      , [3st_Sign] = #{row.v3stSign}
+		      , [3st_Val] = #{row.v3stVal}
+		      
+		      , [3st_Mon] = #{row.v3stMon}
+		      , [3st_UseYn] = #{row.v3stUseYn}
+		      , [4st_Sign] = #{row.v4stSign}
+		      , [4st_Val] = #{row.v4stVal}
+		      , [4st_Mon] = #{row.v4stMon}
+		      
+		      , [4st_UseYn] = #{row.v4stUseYn}                
+                
+              , MOD_DT   = GETDATE()
+              , MOD_ID = #{userId}
+        
+        WHEN NOT MATCHED THEN
+            INSERT ( [YEAR]
+			      , KPI_CD
+			      , KPI_NM
+			      , GUBUN_VAL
+			      , GUBUN_SIGN
+			      , KPI_VAL
+			      
+			      , [1st_Sign]
+			      , [1st_Val]
+			      , [1st_Mon]
+			      , [1st_UseYn]
+			      , [2st_Sign]
+			      
+			      , [2st_Val]
+			      , [2st_Mon]
+			      , [2st_UseYn]
+			      , [3st_Sign]
+			      , [3st_Val]
+			      
+			      , [3st_Mon]
+			      , [3st_UseYn]
+			      , [4st_Sign]
+			      , [4st_Val]
+			      , [4st_Mon]
+			      
+			      , [4st_UseYn]
+			                   
+                   , REG_DT
+                   , REG_ID
+            )
+            VALUES ( Source.YEAR
+                   , Source.KPI_CD
+			       , #{row.kpiNm}
+			       , #{row.gubunVal}
+			       , #{row.gubunSign}
+			       , #{row.kpiVal}
+			      
+			       , #{row.v1stSign}
+			       , #{row.v1stVal}
+			       , #{row.v1stMon}
+			       , #{row.v1stUseYn}
+			       , #{row.v2stSign}
+			      
+			       , #{row.v2stVal}
+			       , #{row.v2stMon}
+			       , #{row.v2stUseYn}
+			       , #{row.v3stSign}
+			       , #{row.v3stVal}
+			      
+			       , #{row.v3stMon}
+			       , #{row.v3stUseYn}
+			       , #{row.v4stSign}
+			       , #{row.v4stVal}
+			       , #{row.v4stMon}
+			       
+			       , #{row.v4stUseYn}
+                
+                   , GETDATE() 
+                   , #{userId}
+            );
+    </update>    
 
 </mapper>

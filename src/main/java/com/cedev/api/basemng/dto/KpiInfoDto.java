@@ -13,7 +13,9 @@ public class KpiInfoDto {
 	private String year;        
     private String kpiCd;            
     private String kpiNm;        
-    private String gubun;        
+    //private String gubun;
+    private String gubunVal;        
+    private String gubunSign;        
     private String kpiVal;        
         
     private String v1stSign;        
