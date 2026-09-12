@@ -27,6 +27,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			                   FROM TB_COIN_DETAIL SUB
 			                  WHERE SUB.CD = A.CD
 		  					)
+		  					
+	  <if test="krNm != null and krNm != ''">
+	  		AND A.KR_NM LIKE CONCAT('%', #{krNm}, '%')
+	  </if>
 		  
 
     </select>
@@ -36,8 +40,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	resultType="com.cedev.api.coin.dto.CoinDetailDto">    	
 				
 		SELECT  A.CD as cd
-		      , A.PRICE as price
-		      , A.PRICE_DT as priceDt		      
+			  , A.PRICE_DT as priceDt
+			  , A.PRICE as price
+		      , A.OPENING_PRICE as openingPrice
+		      , A.HIGH_PRICE as highPrice
+		      , A.LOW_PRICE as lowPrice
+		      , A.VOLUME as volume		      		      
 		      , A.MARKET_CAP as marketCap
 		      , A.ETC as etc
 		      
@@ -48,5 +56,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
               , price_dt DESC		  
 
     </select>
+    
+    
+    
+     	<select id="getCoinChkList"
+		parameterType="com.cedev.api.coin.dto.CoinSearchDto" 
+    	resultType="com.cedev.api.coin.dto.CoinChkDto">    	
+				
+		SELECT  A.CD as cd
+		      , A.PRICE_DT as priceDt
+		      , B.PRICE as price
+		      , B.OPENING_PRICE as openingPrice
+		      , B.HIGH_PRICE as highPrice
+		      , B.LOW_PRICE as lowPrice
+		      , B.VOLUME as volume
+		      , A.DAILY_RANGE as dailyRange
+		      
+		FROM TB_CHK_COIN A
+		INNER JOIN TB_COIN_DETAIL B ON B.CD = A.CD  AND B.PRICE_DT  = A.PRICE_DT 
+		WHERE 1=1
+		  AND A.PRICE_DT = #{priceDt}
+	    ORDER BY A.DAILY_RANGE DESC	  
+
+    </select>    
  
 </mapper>

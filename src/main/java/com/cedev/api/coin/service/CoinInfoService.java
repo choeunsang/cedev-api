@@ -28,6 +28,7 @@ import com.cedev.api.basemng.dto.WaveInfoDto;
 import com.cedev.api.basemng.dto.WaveSaveDto;
 import com.cedev.api.basemng.dto.WaveSearchDto;
 import com.cedev.api.basemng.mapper.KpiInfoMapper;
+import com.cedev.api.coin.dto.CoinChkDto;
 import com.cedev.api.coin.dto.CoinDetailDto;
 import com.cedev.api.coin.dto.CoinInfoDto;
 import com.cedev.api.coin.dto.CoinSearchDto;
@@ -66,6 +67,13 @@ public class CoinInfoService {
     public List<CoinDetailDto> getCoinDetailList(CoinSearchDto searchDto) {
 
         return coinInfoMapper.getCoinDetailList(searchDto);
+                              
+    }        
+    
+    public List<CoinChkDto> getCoinChkList(CoinSearchDto searchDto) {
+
+        return coinInfoMapper.getCoinChkList(searchDto);
+                              
     }    
     
     

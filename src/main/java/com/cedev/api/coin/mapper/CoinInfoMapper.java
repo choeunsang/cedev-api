@@ -19,6 +19,7 @@ import com.cedev.api.basemng.dto.TargetMasterDto;
 import com.cedev.api.basemng.dto.TargetSearchDto;
 import com.cedev.api.basemng.dto.WaveInfoDto;
 import com.cedev.api.basemng.dto.WaveSearchDto;
+import com.cedev.api.coin.dto.CoinChkDto;
 import com.cedev.api.coin.dto.CoinDetailDto;
 import com.cedev.api.coin.dto.CoinInfoDto;
 import com.cedev.api.coin.dto.CoinSearchDto;
@@ -41,6 +42,8 @@ public interface CoinInfoMapper {
 	List<CoinInfoDto> getCoinInfoList(CoinSearchDto searchDto);
 	
 	List<CoinDetailDto> getCoinDetailList(CoinSearchDto searchDto);
+	
+	List<CoinChkDto> getCoinChkList(CoinSearchDto searchDto);
 
 
 }

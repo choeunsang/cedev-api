@@ -13,6 +13,8 @@ public class CoinSearchDto {
 	private String cd;        
     private String krNm;            
     private String enNm;        
+    
+    private String priceDt;        
 
     
         
