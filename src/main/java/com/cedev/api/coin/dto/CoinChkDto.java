@@ -10,7 +10,11 @@ import lombok.ToString;
 @ToString
 public class CoinChkDto {
     
-	private String cd;        
+	private String cd;
+	private String krNm;        
+    private String enNm;        
+    private String description;            
+    private String issueCntryNm;     	
 	private String priceDt;        
     private String price;                
     private String openingPrice;          

@@ -64,6 +64,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	resultType="com.cedev.api.coin.dto.CoinChkDto">    	
 				
 		SELECT  A.CD as cd
+		      , C.KR_NM as krNm
+		      , C.EN_NM as enNm		
+		      , C.DESCRIPTION as description
+		      , C.ISSUE_CNTRY_NM as issueCntryNm		      				  
 		      , A.PRICE_DT as priceDt
 		      , B.PRICE as price
 		      , B.OPENING_PRICE as openingPrice
@@ -73,7 +77,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		      , A.DAILY_RANGE as dailyRange
 		      
 		FROM TB_CHK_COIN A
-		INNER JOIN TB_COIN_DETAIL B ON B.CD = A.CD  AND B.PRICE_DT  = A.PRICE_DT 
+		INNER JOIN TB_COIN_DETAIL B ON B.CD = A.CD  AND B.PRICE_DT  = A.PRICE_DT
+		INNER JOIN TB_COIN_INFO C ON C.CD = A.CD 
 		WHERE 1=1
 		  AND A.PRICE_DT = #{priceDt}
 	    ORDER BY A.DAILY_RANGE DESC	  
