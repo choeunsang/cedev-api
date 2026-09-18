@@ -75,6 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		      , B.LOW_PRICE as lowPrice
 		      , B.VOLUME as volume
 		      , A.DAILY_RANGE as dailyRange
+		      , A.CHANGE_RATE as changeRate
 		      
 		FROM TB_CHK_COIN A
 		INNER JOIN TB_COIN_DETAIL B ON B.CD = A.CD  AND B.PRICE_DT  = A.PRICE_DT
