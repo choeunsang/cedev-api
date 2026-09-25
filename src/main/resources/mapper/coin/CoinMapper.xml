@@ -19,6 +19,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		      , B.PRICE_DT as priceDt
 		      , B.MARKET_CAP as marketCap
 		      , A.USE_YN as useYn
+		 	  , A.LAUNCH_DT as launchDt
+		      
 		FROM TB_COIN_INFO A
 		INNER JOIN TB_COIN_DETAIL B ON B.CD = A.CD 
 		WHERE 1=1		
@@ -76,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		      , B.VOLUME as volume
 		      , A.DAILY_RANGE as dailyRange
 		      , A.CHANGE_RATE as changeRate
+		      , C.LAUNCH_DT as launchDt
 		      
 		FROM TB_CHK_COIN A
 		INNER JOIN TB_COIN_DETAIL B ON B.CD = A.CD  AND B.PRICE_DT  = A.PRICE_DT

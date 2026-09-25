@@ -21,5 +21,5 @@ public class CoinInfoDto {
     private String marketCap;        
     private String useYn;        
 
-            
+    private String launchDt;    
 }

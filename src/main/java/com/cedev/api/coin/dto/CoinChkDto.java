@@ -23,4 +23,5 @@ public class CoinChkDto {
     private String volume;              
     private String dailyRange;                                  
     private String changeRate;                   
+    private String launchDt;    
 }
